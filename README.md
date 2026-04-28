@@ -1,21 +1,28 @@
 <div align="center">
 
-<img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Autonomous Vehicle AI Chatbot Banner" width="100%">
+<img src="https://images.unsplash.com/photo-1542365887-7f0a8b2e7f3f?auto=format&fit=crop&w=1600&q=80" alt="Autonomous Vehicle AI Chatbot Banner" width="100%">
 
-# 🚀 Autonomous Vehicle AI Chatbot
+<br><br>
+
+# 🚗 Autonomous Vehicle AI Chatbot
 
 ### *The Definitive Academic & Professional Assistant for Self-Driving Technology*
 
-[![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![Groq](https://img.shields.io/badge/Powered%20By-Groq-orange?style=for-the-badge)](https://groq.com/)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+<br>
 
----
+<img src="https://img.shields.io/badge/Python-3.8+-111111?style=flat&logo=python" />
+<img src="https://img.shields.io/badge/Powered%20By-Groq-111111?style=flat" />
+<img src="https://img.shields.io/badge/Domain-Autonomous%20Vehicles-111111?style=flat" />
+<img src="https://img.shields.io/badge/License-MIT-111111?style=flat" />
 
-<p align="center">
-<b>An expert-level AI assistant specialized in the field of Autonomous Vehicles.</b><br>
-Built to deliver clear, accurate, and highly detailed answers with a professional, academic tone.
+<br><br>
+
+<p>
+<b>An expert-level AI assistant specialized in Autonomous Vehicle systems.</b><br>
+Designed to deliver structured, accurate, and professional explanations for academic and technical use.
 </p>
+
+<br>
 
 [Quick Start](#-quick-start) • [Key Features](#-key-features) • [Technical Expertise](#-technical-expertise) • [Architecture](#-architecture)
 
@@ -25,33 +32,37 @@ Built to deliver clear, accurate, and highly detailed answers with a professiona
 
 ## 📖 Overview
 
-The **Autonomous Vehicle AI Chatbot** is a specialized tool designed for students, researchers, and engineers working in the autonomy space. Leveraging the high-performance **Groq API** and the **GPT-OSS-120B** model, it provides deep insights into the complex world of self-driving cars—ranging from hardware sensor stacks to high-level path planning logic.
+The **Autonomous Vehicle AI Chatbot** is a domain-specific intelligent assistant designed for students, researchers, and engineers working in self-driving technology.
 
-Whether you're preparing for a technical interview at Waymo or Tesla, or studying for a university exam on **Sensor Fusion**, this assistant acts as your personal professor, breaking down complex topics into structured, easy-to-digest formats.
+Powered by the high-performance **Groq API**, the chatbot provides deep insights into:
+
+- Sensor systems and perception pipelines  
+- Localization and mapping techniques  
+- Path planning and decision-making algorithms  
+
+It acts as a **virtual professor**, simplifying complex concepts into structured, easy-to-understand explanations suitable for exams and interviews.
 
 ---
 
 ## ✨ Key Features
 
-- **🎓 Academic Tone**: Delivers expert-level explanations suitable for professional environments.
-- **📊 Structured Responses**: Uses Markdown tables, clear headings, and bullet points for complex comparisons.
-- **🛠️ High-Speed Inference**: Powered by Groq's LPU™ Inference Engine for near-instant responses.
-- **🧠 SAE Specialty**: Comprehensive knowledge of SAE Levels of driving automation (0-5).
-- **🛤️ Contextual Memory**: Maintains conversation history for coherent, multi-turn discussions.
+- 🎓 **Academic Tone** — Professional, exam-ready explanations  
+- 📊 **Structured Responses** — Tables, bullet points, clean formatting  
+- ⚡ **Fast AI Responses** — Powered by Groq  
+- 🧠 **SAE Level Expertise** — Covers Levels 0–5 automation  
+- 🔄 **Context Awareness** — Maintains conversation flow  
 
 ---
 
 ## 🔬 Technical Expertise
 
-The chatbot is specifically fine-tuned (via system prompt engineering) to guide users through:
-
 | Category | Topics Covered |
 | :--- | :--- |
-| **Perception** | LiDAR, Radar, Ultrasonic, Computer Vision, YOLO, Image Segmentation. |
-| **Localization** | SLAM, GPS/GNSS, IMU, HD Maps. |
-| **Logic/Planning** | A* Search, Dijkstra, Markov Decision Processes, Path Integration. |
-| **Hardware** | Sensor Fusion, CAN Bus, ECU, NVIDIA Drive, Tesla FSD Hardware. |
-| **Ethics & Safety** | Moral Machine, Fail-safe vs. Fail-operational, Regulatory Standards. |
+| **Perception** | LiDAR, Radar, Ultrasonic, Computer Vision, Object Detection |
+| **Localization** | SLAM, GPS/GNSS, IMU, HD Maps |
+| **Planning** | A* Search, Dijkstra, Decision Making |
+| **Hardware** | Sensor Fusion, CAN Bus, ECU, Autonomous Systems |
+| **Safety** | Ethics, Fail-safe Systems, Regulations |
 
 ---
 
@@ -59,54 +70,10 @@ The chatbot is specifically fine-tuned (via system prompt engineering) to guide 
 
 ```mermaid
 graph LR
-A[User CLI] --> B[Python App]
-B --> C{dotenv}
-C --> D[Groq SDK]
-D --> E[GPT-OSS-120B Model]
+A[User CLI] --> B[Python Application]
+B --> C[dotenv]
+C --> D[Groq API]
+D --> E[AI Model]
 E --> D
 D --> B
 B --> A
-```
-
----
-
-## 🚀 Quick Start
-
-### 1. Prerequisites
-- Python 3.8+
-- [Groq AI API Key](https://console.groq.com/keys)
-
-### 2. Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/BiswajithPN/AI-Chatbot.git
-cd AI-Chatbot
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-### 3. Configuration
-
-Create a `.env` file in the root directory:
-
-```env
-GROQ_API_KEY=your_actual_api_key_here
-```
-
-### 4. Run the Chatbot
-
-```bash
-python app.py
-```
-
----
-
-<div align="center">
-
-<p>Developed with ❤️ by <b>BiswajithPN</b></p>
-
-<p>Stay safe on the road, even if it's autonomous!</p>
-
-</div>
