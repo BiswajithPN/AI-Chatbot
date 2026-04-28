@@ -78,7 +78,83 @@
 </head>
 <body class="bg-slate-900 text-white overflow-hidden">
     <div class="flex h-screen w-full">
-        <!-- Sidebar -->
+        <!-- Mobile Header (only visible on mobile) -->
+        <div class="md:hidden fixed top-0 left-0 right-0 z-50 bg-slate-800/95 backdrop-blur-sm border-b border-slate-700 px-4 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-cyan-500 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-white text-lg">smart_toy</span>
+                    </div>
+                    <div>
+                        <h2 class="text-cyan-400 font-bold text-lg">AV-OS 1.0</h2>
+                    </div>
+                </div>
+                <button id="mobileMenuBtn" class="p-3 text-slate-400 hover:text-cyan-400 transition-colors rounded-lg active:bg-slate-700/50 min-w-[48px] min-h-[48px] flex items-center justify-center">
+                    <span class="material-symbols-outlined text-2xl">menu</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Sidebar Overlay (only visible on mobile) -->
+        <div id="mobileSidebar" class="md:hidden fixed inset-0 z-40 transform -translate-x-full transition-transform duration-300 ease-in-out">
+            <div class="absolute inset-0 bg-black/60" onclick="closeMobileSidebar()"></div>
+            <aside class="relative w-80 max-w-[85vw] h-full bg-slate-800 border-r border-slate-700 py-6 overflow-y-auto">
+                <!-- Close Button -->
+                <div class="absolute top-4 right-4 z-10">
+                    <button onclick="closeMobileSidebar()" class="p-2 text-slate-400 hover:text-cyan-400 rounded-lg min-w-[44px] min-h-[44px] flex items-center justify-center">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                
+                <!-- Logo -->
+                <div class="px-6 mb-8 pr-16">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-cyan-500 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-white">smart_toy</span>
+                        </div>
+                        <div>
+                            <h2 class="text-cyan-400 font-bold text-xl">AV-OS 1.0</h2>
+                            <p class="text-sm text-slate-400 uppercase tracking-wide">Autonomous Mode</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Navigation -->
+                <nav class="flex-1 px-3 space-y-2">
+                    <a class="nav-item active flex items-center gap-3 px-4 py-4 rounded-lg text-base font-medium min-h-[56px]" href="#" onclick="switchMode('intelligence'); closeMobileSidebar();">
+                        <span class="material-symbols-outlined text-xl">psychology</span>
+                        <span>Intelligence</span>
+                    </a>
+                    <a class="nav-item flex items-center gap-3 px-4 py-4 rounded-lg text-base font-medium text-slate-400 min-h-[56px]" href="#" onclick="switchMode('history'); closeMobileSidebar();">
+                        <span class="material-symbols-outlined text-xl">history</span>
+                        <span>Chat History</span>
+                    </a>
+                    <a class="nav-item flex items-center gap-3 px-4 py-4 rounded-lg text-base font-medium text-slate-400 min-h-[56px]" href="#" onclick="switchMode('examples'); closeMobileSidebar();">
+                        <span class="material-symbols-outlined text-xl">lightbulb</span>
+                        <span>Examples</span>
+                    </a>
+                    <a class="nav-item flex items-center gap-3 px-4 py-4 rounded-lg text-base font-medium text-slate-400 min-h-[56px]" href="#" onclick="switchMode('settings'); closeMobileSidebar();">
+                        <span class="material-symbols-outlined text-xl">settings</span>
+                        <span>Settings</span>
+                    </a>
+                </nav>
+                
+                <!-- User Profile -->
+                <div class="px-6 mt-8">
+                    <div class="flex items-center gap-3 p-4 bg-slate-700/50 rounded-lg">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-white">person</span>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-base font-medium">AV Engineer</p>
+                            <p class="text-sm text-slate-400">Online</p>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <!-- Desktop Sidebar (unchanged) -->
         <aside class="hidden md:flex flex-col h-full py-6 bg-slate-800 border-r border-slate-700 w-64">
             <!-- Logo -->
             <div class="px-6 mb-8">
@@ -128,9 +204,9 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 flex flex-col bg-slate-900">
-            <!-- Header -->
-            <header class="flex justify-between items-center px-6 py-4 bg-slate-800 border-b border-slate-700">
+        <main class="flex-1 flex flex-col bg-slate-900 pt-16 md:pt-0">
+            <!-- Desktop Header (unchanged) -->
+            <header class="hidden md:flex justify-between items-center px-6 py-4 bg-slate-800 border-b border-slate-700">
                 <div class="flex items-center gap-4">
                     <h1 class="text-2xl font-bold text-cyan-400">AV Intelligence</h1>
                     <div class="flex items-center gap-4 text-base">
@@ -150,7 +226,7 @@
             </header>
 
             <!-- Chat Messages -->
-            <div class="flex-1 overflow-y-auto p-6 space-y-6" id="chatMessages">
+            <div class="flex-1 overflow-y-auto px-3 py-4 md:p-6 space-y-4 md:space-y-6 overscroll-behavior-contain" id="chatMessages">
                 <!-- System Status -->
                 <div class="flex justify-center">
                     <span class="px-6 py-3 bg-slate-800 text-slate-400 rounded-full text-base">
@@ -241,14 +317,14 @@
             </div>
 
             <!-- Input Area -->
-            <div class="border-t border-slate-700 bg-slate-800 p-4">
+            <div class="border-t border-slate-700 bg-slate-800 p-3 md:p-4 pb-safe">
                 <div class="max-w-4xl mx-auto">
-                    <div class="flex items-end gap-3 bg-slate-700 rounded-2xl p-3">
+                    <div class="flex items-end gap-2 md:gap-3 bg-slate-700 rounded-2xl p-2 md:p-3">
                         <div class="flex-1">
                             <textarea 
                                 id="chatInput"
-                                class="chat-input w-full bg-transparent text-white placeholder-slate-400 border-none resize-none text-lg p-3"
-                                placeholder="Ask about autonomous vehicles, SAE levels, sensors..."
+                                class="chat-input w-full bg-transparent text-white placeholder-slate-400 border-none resize-none text-base md:text-lg p-3 md:p-3 leading-relaxed"
+                                placeholder="Ask about autonomous vehicles..."
                                 rows="1"
                                 onkeydown="handleKeyDown(event)"
                                 oninput="autoResize(this)"
@@ -256,26 +332,27 @@
                         </div>
                         <button 
                             id="sendButton"
-                            class="p-3 bg-cyan-500 text-white rounded-xl hover:bg-cyan-600 transition-colors disabled:opacity-50"
+                            class="p-3 md:p-3 bg-cyan-500 text-white rounded-xl hover:bg-cyan-600 active:bg-cyan-700 transition-colors disabled:opacity-50 min-w-[48px] min-h-[48px] flex items-center justify-center"
                             onclick="sendMessage()"
                         >
-                            <span class="material-symbols-outlined">send</span>
+                            <span class="material-symbols-outlined text-xl">send</span>
                         </button>
                     </div>
                     
                     <!-- Quick Actions -->
-                    <div class="flex items-center justify-between mt-3 text-base">
-                        <div class="flex gap-4">
-                            <button class="text-slate-400 hover:text-cyan-400 transition-colors" onclick="showExamples()">
+                    <div class="flex items-center justify-between mt-3 text-sm md:text-base">
+                        <div class="flex gap-4 md:gap-4">
+                            <button class="text-slate-400 hover:text-cyan-400 active:text-cyan-300 transition-colors py-2 px-1 min-h-[44px] flex items-center" onclick="showExamples()">
                                 Examples
                             </button>
-                            <button class="text-slate-400 hover:text-cyan-400 transition-colors" onclick="showChatHistory()">
+                            <button class="text-slate-400 hover:text-cyan-400 active:text-cyan-300 transition-colors py-2 px-1 min-h-[44px] flex items-center" onclick="showChatHistory()">
                                 History
                             </button>
                         </div>
-                        <div class="flex items-center gap-2 text-sm text-slate-500">
+                        <div class="flex items-center gap-2 text-xs md:text-sm text-slate-500">
                             <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                            <span>AV Intelligence Online</span>
+                            <span class="hidden sm:inline">AV Intelligence Online</span>
+                            <span class="sm:hidden">Online</span>
                         </div>
                     </div>
                 </div>
@@ -289,6 +366,27 @@
         const sendButton = document.getElementById('sendButton');
         const typingIndicator = document.getElementById('typingIndicator');
         const sessionId = 'av_session_' + Date.now();
+
+        // Mobile menu functions
+        function openMobileSidebar() {
+            const sidebar = document.getElementById('mobileSidebar');
+            sidebar.classList.remove('-translate-x-full');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileSidebar() {
+            const sidebar = document.getElementById('mobileSidebar');
+            sidebar.classList.add('-translate-x-full');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Mobile menu button event
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', openMobileSidebar);
+            }
+        });
 
         // Handle keyboard input
         function handleKeyDown(event) {
