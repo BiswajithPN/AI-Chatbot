@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>AV-OS 1.0 - Autonomous Vehicle Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f172a;
+            color: #ffffff;
+        }
+        
+        .message-animation {
+            animation: slideIn 0.4s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .typing-dot {
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        
+        @keyframes typing {
+            0%, 80%, 100% { 
+                transform: scale(0.8); 
+                opacity: 0.5; 
+            }
+            40% { 
+                transform: scale(1.2); 
+                opacity: 1; 
+            }
+        }
+        
+        .nav-item {
+            transition: all 0.2s ease;
+        }
+        
+        .nav-item:hover {
+            background: rgba(6, 182, 212, 0.1);
+            transform: translateX(4px);
+        }
+        
+        .nav-item.active {
+            background: rgba(6, 182, 212, 0.15);
+            color: #06b6d4;
+            border-left: 3px solid #06b6d4;
+        }
+        
+        .chat-input {
+            resize: none;
+            overflow: hidden;
+        }
+        
+        .chat-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-white overflow-hidden">
+    <div class="flex h-screen w-full">
+        <!-- Sidebar -->
+        <aside class="hidden md:flex flex-col h-full py-6 bg-slate-800 border-r border-slate-700 w-64">
+            <!-- Logo -->
+            <div class="px-6 mb-8">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-cyan-500 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-white">smart_toy</span>
+                    </div>
+                    <div>
+                        <h2 class="text-cyan-400 font-bold text-xl">AV-OS 1.0</h2>
+                        <p class="text-sm text-slate-400 uppercase tracking-wide">Autonomous Mode</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="flex-1 px-3 space-y-2">
+                <a class="nav-item active flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium" href="#" onclick="switchMode('intelligence')">
+                    <span class="material-symbols-outlined text-xl">psychology</span>
+                    <span>Intelligence</span>
+                </a>
+                <a class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium text-slate-400" href="#" onclick="switchMode('history')">
+                    <span class="material-symbols-outlined text-xl">history</span>
+                    <span>Chat History</span>
+                </a>
+                <a class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium text-slate-400" href="#" onclick="switchMode('examples')">
+                    <span class="material-symbols-outlined text-xl">lightbulb</span>
+                    <span>Examples</span>
+                </a>
+                <a class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium text-slate-400" href="#" onclick="switchMode('settings')">
+                    <span class="material-symbols-outlined text-xl">settings</span>
+                    <span>Settings</span>
+                </a>
+            </nav>
+            
+            <!-- User Profile -->
+            <div class="px-6 mt-auto">
+                <div class="flex items-center gap-3 p-3 bg-slate-700/50 rounded-lg">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-white text-sm">person</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium">AV Engineer</p>
+                        <p class="text-sm text-slate-400">Online</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col bg-slate-900">
+            <!-- Header -->
+            <header class="flex justify-between items-center px-6 py-4 bg-slate-800 border-b border-slate-700">
+                <div class="flex items-center gap-4">
+                    <h1 class="text-2xl font-bold text-cyan-400">AV Intelligence</h1>
+                    <div class="flex items-center gap-4 text-base">
+                        <span class="flex items-center gap-1 text-green-400">
+                            <span class="material-symbols-outlined text-lg">circle</span>
+                            AI Active
+                        </span>
+                        <span class="flex items-center gap-1 text-slate-400">
+                            <span class="material-symbols-outlined text-lg">wifi</span>
+                            Connected
+                        </span>
+                    </div>
+                </div>
+                <button class="px-6 py-3 bg-red-500/20 text-red-400 rounded-lg border border-red-500/30 text-base hover:bg-red-500/30 transition-colors" onclick="clearChat()">
+                    Clear Chat
+                </button>
+            </header>
+
+            <!-- Chat Messages -->
+            <div class="flex-1 overflow-y-auto p-6 space-y-6" id="chatMessages">
+                <!-- System Status -->
+                <div class="flex justify-center">
+                    <span class="px-6 py-3 bg-slate-800 text-slate-400 rounded-full text-base">
+                        AV Intelligence System Ready
+                    </span>
+                </div>
+
+                <!-- Welcome Message -->
+                <div class="flex items-start gap-4 message-animation">
+                    <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-cyan-400">psychology</span>
+                    </div>
+                    <div class="flex-1 space-y-3">
+                        <div class="bg-slate-800 p-5 rounded-2xl rounded-tl-none border-l-4 border-cyan-400">
+                            <p class="text-white text-lg leading-relaxed mb-4">
+                                Welcome to AV-OS Intelligence. I'm your specialized autonomous vehicle AI assistant. 
+                                I can help you understand self-driving technology, SAE levels, sensor systems, and everything about autonomous vehicles.
+                            </p>
+                            
+                            <!-- Quick Examples -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
+                                <button class="text-left p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700 transition-colors" onclick="sendExampleQuestion('Explain SAE Level 4 vs Level 5 autonomy')">
+                                    <div class="flex items-center gap-3">
+                                        <span class="material-symbols-outlined text-cyan-400">layers</span>
+                                        <div>
+                                            <p class="font-medium text-cyan-400 text-base">SAE Levels</p>
+                                            <p class="text-base text-slate-300">Autonomy Standards</p>
+                                        </div>
+                                    </div>
+                                </button>
+                                <button class="text-left p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700 transition-colors" onclick="sendExampleQuestion('Compare LiDAR vs Radar sensors')">
+                                    <div class="flex items-center gap-3">
+                                        <span class="material-symbols-outlined text-cyan-400">radar</span>
+                                        <div>
+                                            <p class="font-medium text-cyan-400 text-base">Sensors</p>
+                                            <p class="text-base text-slate-300">Detection Systems</p>
+                                        </div>
+                                    </div>
+                                </button>
+                                <button class="text-left p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700 transition-colors" onclick="sendExampleQuestion('How does Tesla FSD work?')">
+                                    <div class="flex items-center gap-3">
+                                        <span class="material-symbols-outlined text-cyan-400">precision_manufacturing</span>
+                                        <div>
+                                            <p class="font-medium text-cyan-400 text-base">Companies</p>
+                                            <p class="text-base text-slate-300">Tesla & Waymo</p>
+                                        </div>
+                                    </div>
+                                </button>
+                                <button class="text-left p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700 transition-colors" onclick="sendExampleQuestion('Explain A* path planning algorithm')">
+                                    <div class="flex items-center gap-3">
+                                        <span class="material-symbols-outlined text-cyan-400">route</span>
+                                        <div>
+                                            <p class="font-medium text-cyan-400 text-base">Algorithms</p>
+                                            <p class="text-base text-slate-300">Path Planning</p>
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                        <p class="text-sm text-slate-500 ml-1">AV INTELLIGENCE • SYSTEM READY</p>
+                    </div>
+                </div>
+
+                <!-- Typing Indicator -->
+                <div class="flex items-start gap-4" id="typingIndicator" style="display: none;">
+                    <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-cyan-400 animate-pulse">psychology</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="bg-slate-800 p-5 rounded-2xl rounded-tl-none border-l-4 border-cyan-400">
+                            <div class="flex items-center gap-3">
+                                <span class="text-white text-lg">AV Intelligence is thinking</span>
+                                <div class="flex gap-1">
+                                    <div class="w-2 h-2 bg-cyan-400 rounded-full typing-dot" style="animation-delay: 0s;"></div>
+                                    <div class="w-2 h-2 bg-cyan-400 rounded-full typing-dot" style="animation-delay: 0.2s;"></div>
+                                    <div class="w-2 h-2 bg-cyan-400 rounded-full typing-dot" style="animation-delay: 0.4s;"></div>
+                                </div>
+                            </div>
+                            <div class="mt-3 bg-slate-700/50 rounded p-2">
+                                <div class="text-sm text-slate-300" id="processingStep">Processing your query...</div>
+                                <div class="mt-1 bg-slate-600 rounded-full h-1">
+                                    <div class="h-full bg-cyan-400 rounded-full transition-all duration-300" id="progressBar" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="border-t border-slate-700 bg-slate-800 p-4">
+                <div class="max-w-4xl mx-auto">
+                    <div class="flex items-end gap-3 bg-slate-700 rounded-2xl p-3">
+                        <div class="flex-1">
+                            <textarea 
+                                id="chatInput"
+                                class="chat-input w-full bg-transparent text-white placeholder-slate-400 border-none resize-none text-lg p-3"
+                                placeholder="Ask about autonomous vehicles, SAE levels, sensors..."
+                                rows="1"
+                                onkeydown="handleKeyDown(event)"
+                                oninput="autoResize(this)"
+                            ></textarea>
+                        </div>
+                        <button 
+                            id="sendButton"
+                            class="p-3 bg-cyan-500 text-white rounded-xl hover:bg-cyan-600 transition-colors disabled:opacity-50"
+                            onclick="sendMessage()"
+                        >
+                            <span class="material-symbols-outlined">send</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="flex items-center justify-between mt-3 text-base">
+                        <div class="flex gap-4">
+                            <button class="text-slate-400 hover:text-cyan-400 transition-colors" onclick="showExamples()">
+                                Examples
+                            </button>
+                            <button class="text-slate-400 hover:text-cyan-400 transition-colors" onclick="showChatHistory()">
+                                History
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm text-slate-500">
+                            <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                            <span>AV Intelligence Online</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const sendButton = document.getElementById('sendButton');
+        const typingIndicator = document.getElementById('typingIndicator');
+        const sessionId = 'av_session_' + Date.now();
+
+        // Handle keyboard input
+        function handleKeyDown(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        // Auto-resize textarea
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+        }
+
+        // Send example question
+        function sendExampleQuestion(question) {
+            chatInput.value = question;
+            sendMessage();
+        }
+
+        // Add message to chat
+        function addMessage(content, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex items-start gap-4 message-animation ${isUser ? 'flex-row-reverse' : ''}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'w-10 h-10 rounded-full flex items-center justify-center shrink-0';
+            
+            if (isUser) {
+                avatar.className += ' bg-gradient-to-r from-cyan-400 to-blue-500';
+                avatar.innerHTML = '<span class="material-symbols-outlined text-white">person</span>';
+            } else {
+                avatar.className += ' bg-slate-700';
+                avatar.innerHTML = '<span class="material-symbols-outlined text-cyan-400">psychology</span>';
+            }
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = `flex-1 space-y-2 ${isUser ? 'text-right' : ''}`;
+            
+            const bubble = document.createElement('div');
+            bubble.className = `p-4 rounded-2xl ${isUser ? 'bg-slate-700 rounded-tr-none' : 'bg-slate-800 rounded-tl-none border-l-4 border-cyan-400'}`;
+            
+            if (isUser) {
+                bubble.innerHTML = `<p class="text-white text-lg">${content}</p>`;
+            } else {
+                const botContent = document.createElement('div');
+                botContent.className = 'text-white text-lg leading-relaxed';
+                
+                try {
+                    let parsedContent = marked.parse(content);
+                    // Clean styling
+                    parsedContent = parsedContent.replace(/<h2>/g, '<h2 class="text-xl font-bold text-cyan-400 mb-3 mt-4">');
+                    parsedContent = parsedContent.replace(/<h3>/g, '<h3 class="text-lg font-semibold text-cyan-300 mb-2">');
+                    parsedContent = parsedContent.replace(/<p>/g, '<p class="mb-3 text-white text-lg">');
+                    parsedContent = parsedContent.replace(/<ul>/g, '<ul class="list-disc list-inside space-y-2 mb-3 text-lg">');
+                    parsedContent = parsedContent.replace(/<ol>/g, '<ol class="list-decimal list-inside space-y-2 mb-3 text-lg">');
+                    parsedContent = parsedContent.replace(/<strong>/g, '<strong class="text-cyan-300 font-semibold">');
+                    parsedContent = parsedContent.replace(/<code>/g, '<code class="bg-slate-900 text-cyan-300 px-2 py-1 rounded text-base">');
+                    
+                    botContent.innerHTML = parsedContent;
+                } catch (error) {
+                    botContent.textContent = content;
+                }
+                
+                bubble.appendChild(botContent);
+            }
+            
+            const timestamp = document.createElement('p');
+            timestamp.className = `text-sm text-slate-500 ${isUser ? 'mr-1' : 'ml-1'}`;
+            timestamp.textContent = `${isUser ? 'USER' : 'AV INTELLIGENCE'} • ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+            
+            messageContent.appendChild(bubble);
+            messageContent.appendChild(timestamp);
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(messageContent);
+            
+            chatMessages.insertBefore(messageDiv, typingIndicator);
+            scrollToBottom();
+        }
+
+        // Show typing indicator
+        function showTyping() {
+            typingIndicator.style.display = 'flex';
+            
+            const steps = [
+                "Analyzing your query...",
+                "Accessing AV knowledge base...",
+                "Processing autonomous vehicle data...",
+                "Generating response..."
+            ];
+            
+            let currentStep = 0;
+            const processingStep = document.getElementById('processingStep');
+            const progressBar = document.getElementById('progressBar');
+            
+            const stepInterval = setInterval(() => {
+                if (currentStep < steps.length) {
+                    processingStep.textContent = steps[currentStep];
+                    progressBar.style.width = `${((currentStep + 1) / steps.length) * 100}%`;
+                    currentStep++;
+                } else {
+                    clearInterval(stepInterval);
+                }
+            }, 600);
+            
+            typingIndicator.stepInterval = stepInterval;
+            scrollToBottom();
+        }
+
+        // Hide typing indicator
+        function hideTyping() {
+            typingIndicator.style.display = 'none';
+            if (typingIndicator.stepInterval) {
+                clearInterval(typingIndicator.stepInterval);
+                typingIndicator.stepInterval = null;
+            }
+            const progressBar = document.getElementById('progressBar');
+            if (progressBar) {
+                progressBar.style.width = '0%';
+            }
+        }
+
+        // Scroll to bottom
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Send message
+        async function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            chatInput.disabled = true;
+            sendButton.disabled = true;
+            sendButton.innerHTML = '<span class="material-symbols-outlined animate-spin">hourglass_empty</span>';
+            
+            addMessage(message, true);
+            chatInput.value = '';
+            chatInput.style.height = 'auto';
+            
+            showTyping();
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        session_id: sessionId
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                // Minimum loading time for better UX
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                if (data.error) {
+                    addMessage(`**⚠️ System Error**\n\n${data.error}\n\n*Please try again or contact support if the issue persists.*`);
+                } else {
+                    addMessage(data.response);
+                }
+            } catch (error) {
+                await new Promise(resolve => setTimeout(resolve, 500));
+                addMessage(`**🔌 Connection Error**\n\nUnable to reach AV Intelligence servers. Please check your connection and try again.\n\n*Error: ${error.message}*`);
+                console.error('Error:', error);
+            } finally {
+                hideTyping();
+                
+                setTimeout(() => {
+                    chatInput.disabled = false;
+                    sendButton.disabled = false;
+                    sendButton.innerHTML = '<span class="material-symbols-outlined">send</span>';
+                    chatInput.focus();
+                }, 200);
+            }
+        }
+
+        // Clear chat
+        async function clearChat() {
+            try {
+                const response = await fetch('/clear', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        session_id: sessionId
+                    })
+                });
+
+                if (response.ok) {
+                    // Clear all messages except system status and welcome
+                    const messages = chatMessages.children;
+                    const elementsToRemove = [];
+                    
+                    for (let i = 0; i < messages.length; i++) {
+                        const element = messages[i];
+                        if (element.id !== 'typingIndicator' && 
+                            !element.textContent.includes('AV Intelligence System Ready') &&
+                            !element.textContent.includes('Welcome to AV-OS Intelligence')) {
+                            elementsToRemove.push(element);
+                        }
+                    }
+                    
+                    elementsToRemove.forEach(element => element.remove());
+                    
+                    // Add reset message
+                    const resetMsg = document.createElement('div');
+                    resetMsg.className = 'flex justify-center';
+                    resetMsg.innerHTML = '<span class="px-4 py-2 bg-slate-800 text-slate-400 rounded-full text-sm">Chat History Cleared</span>';
+                    chatMessages.insertBefore(resetMsg, typingIndicator);
+                }
+            } catch (error) {
+                console.error('Error clearing chat:', error);
+            }
+        }
+
+        // Navigation functions
+        function switchMode(mode) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            event.target.closest('.nav-item').classList.add('active');
+            
+            switch(mode) {
+                case 'history':
+                    showChatHistory();
+                    break;
+                case 'examples':
+                    showExamples();
+                    break;
+                case 'settings':
+                    showSettings();
+                    break;
+            }
+        }
+
+        function showChatHistory() {
+            addMessage(`**📚 Chat History**\n\nRecent conversations:\n\n• SAE Level 4 vs Level 5 Discussion - 2 hours ago\n• LiDAR vs Radar Comparison - 1 day ago\n• Tesla FSD Architecture - 3 days ago\n\n*Chat history is automatically saved.*`);
+        }
+
+        function showExamples() {
+            addMessage(`**💡 Example Questions**\n\n**SAE Levels:**\n• What are the differences between SAE Level 2 and Level 3?\n• How does SAE Level 5 full autonomy work?\n\n**Sensors:**\n• How does sensor fusion work in autonomous vehicles?\n• Compare LiDAR, Radar, and camera systems\n\n**Companies:**\n• Compare Waymo and Tesla approaches\n• How does Tesla's FSD neural network work?\n\n**Ethics:**\n• Explain ethical dilemmas in AV decision making\n• What are the main safety challenges?`);
+        }
+
+        function showSettings() {
+            addMessage(`**⚙️ AV-OS Settings**\n\n**System Configuration:**\n• Response Detail: Expert Mode\n• Auto-Save: Enabled\n• Real-time Analysis: Active\n\n**Features:**\n• Technical explanations\n• Industry analysis\n• Algorithm explanations\n• Safety discussions\n\nAll settings optimized for autonomous vehicle discussions.`);
+        }
+
+        // Focus input on load
+        window.addEventListener('load', () => {
+            chatInput.focus();
+        });
+    </script>
+</body>
+</html>

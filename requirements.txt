@@ -1,0 +1,7 @@
+django
+groq
+python-dotenv
+whitenoise
+gunicorn
+flask
+flask-cors
