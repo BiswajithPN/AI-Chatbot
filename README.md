@@ -1,7 +1,6 @@
 <div align="center">
 
-<img src="https://images.unsplash.com/photo-1542365887-7f0a8b2e7f3f?auto=format&fit=crop&w=1600&q=80" alt="Autonomous Vehicle AI Chatbot Banner" width="100%">
-
+<img src="https://images.unsplash.com/photo-1542365887-7f0a8b2e7f3f?auto=format&fit=crop&w=1600&q=80" width="100%">
 <br><br>
 
 # 🚗 Autonomous Vehicle AI Chatbot
