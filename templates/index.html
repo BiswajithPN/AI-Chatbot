@@ -20,6 +20,231 @@
             color: #ffffff;
         }
         
+        /* Premium Loading Screen */
+        #loadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        
+        #loadingScreen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        /* Modern Car Animation */
+        .car-container {
+            position: relative;
+            width: 200px;
+            height: 100px;
+            margin-bottom: 30px;
+        }
+        
+        /* Road */
+        .road {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, #475569 50%, transparent 100%);
+        }
+        
+        .road-line {
+            position: absolute;
+            bottom: 22px;
+            width: 30px;
+            height: 2px;
+            background: #06b6d4;
+            animation: roadMove 1s linear infinite;
+        }
+        
+        @keyframes roadMove {
+            0% { left: -30px; opacity: 0; }
+            50% { opacity: 1; }
+            100% { left: 100%; opacity: 0; }
+        }
+        
+        /* Car Body */
+        .car {
+            position: absolute;
+            bottom: 23px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 40px;
+        }
+        
+        .car-body {
+            position: absolute;
+            bottom: 10px;
+            left: 8px;
+            width: 85px;
+            height: 22px;
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            border-radius: 12px 12px 6px 6px;
+            box-shadow: 0 8px 30px rgba(6, 182, 212, 0.4);
+        }
+        
+        /* Car Roof */
+        .car-roof {
+            position: absolute;
+            bottom: 25px;
+            left: 25px;
+            width: 50px;
+            height: 18px;
+            background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+            border-radius: 10px 10px 0 0;
+        }
+        
+        /* Windows */
+        .car-window {
+            position: absolute;
+            top: 2px;
+            width: 18px;
+            height: 11px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+        
+        .car-window.left {
+            left: 4px;
+        }
+        
+        .car-window.right {
+            right: 4px;
+        }
+        
+        /* Wheels */
+        .wheel {
+            position: absolute;
+            bottom: 0;
+            width: 15px;
+            height: 15px;
+            background: #1e293b;
+            border: 2px solid #06b6d4;
+            border-radius: 50%;
+            animation: wheelRotate 0.6s linear infinite;
+        }
+        
+        .wheel.front {
+            right: 12px;
+        }
+        
+        .wheel.back {
+            left: 12px;
+        }
+        
+        @keyframes wheelRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Headlights */
+        .headlight {
+            position: absolute;
+            bottom: 15px;
+            right: 6px;
+            width: 6px;
+            height: 6px;
+            background: #fbbf24;
+            border-radius: 50%;
+            box-shadow: 0 0 12px #fbbf24;
+            animation: headlightBlink 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes headlightBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* Sensor Waves */
+        .sensor-wave {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid #06b6d4;
+            border-radius: 50%;
+            animation: sensorPulse 2s ease-out infinite;
+        }
+        
+        .sensor-wave:nth-child(2) {
+            animation-delay: 0.7s;
+        }
+        
+        @keyframes sensorPulse {
+            0% {
+                width: 20px;
+                height: 20px;
+                opacity: 1;
+            }
+            100% {
+                width: 80px;
+                height: 80px;
+                opacity: 0;
+            }
+        }
+        
+        /* Loading Text */
+        .loading-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #06b6d4;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        
+        .loading-subtitle {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 25px;
+            font-weight: 400;
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            width: 280px;
+            max-width: 90vw;
+            height: 5px;
+            background: rgba(6, 182, 212, 0.15);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #06b6d4 0%, #0891b2 50%, #06b6d4 100%);
+            background-size: 200% 100%;
+            animation: progressLoad 2.5s ease-out forwards, progressShine 1.5s ease-in-out infinite;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
+        }
+        
+        @keyframes progressLoad {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+        
+        @keyframes progressShine {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        
+        
         .message-animation {
             animation: slideIn 0.4s ease-out;
         }
@@ -68,15 +293,96 @@
         .chat-input {
             resize: none;
             overflow: hidden;
+            color: #ffffff;
+        }
+        
+        .chat-input::placeholder {
+            color: #94a3b8;
+            opacity: 1;
         }
         
         .chat-input:focus {
             outline: none;
-            box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.3);
+        }
+        
+        .input-container {
+            transition: all 0.2s ease;
+            background: rgba(51, 65, 85, 0.9) !important;
+        }
+        
+        .input-container:focus-within {
+            background: rgba(51, 65, 85, 1) !important;
+        }
+        
+        /* Desktop-only max-width */
+        @media (min-width: 768px) {
+            .input-wrapper {
+                max-width: 900px;
+            }
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 767px) {
+            .input-wrapper {
+                max-width: 100%;
+            }
+            
+            .input-container {
+                padding: 0.5rem !important;
+                background: rgba(51, 65, 85, 0.95) !important;
+            }
+            
+            .chat-input {
+                font-size: 16px !important; /* Prevents zoom on iOS */
+                padding: 0.75rem !important;
+                color: #ffffff !important;
+            }
+            
+            .chat-input::placeholder {
+                color: #cbd5e1 !important;
+            }
         }
     </style>
 </head>
 <body class="bg-slate-900 text-white overflow-hidden">
+    <!-- Premium Loading Screen -->
+    <div id="loadingScreen">
+        <!-- Car Animation Container -->
+        <div class="car-container">
+            <!-- Sensor Waves -->
+            <div class="sensor-wave"></div>
+            <div class="sensor-wave"></div>
+            
+            <!-- Car -->
+            <div class="car">
+                <div class="car-roof">
+                    <div class="car-window left"></div>
+                    <div class="car-window right"></div>
+                </div>
+                <div class="car-body">
+                    <div class="headlight"></div>
+                </div>
+                <div class="wheel front"></div>
+                <div class="wheel back"></div>
+            </div>
+            
+            <!-- Road -->
+            <div class="road"></div>
+            <div class="road-line" style="animation-delay: 0s;"></div>
+            <div class="road-line" style="animation-delay: 0.3s;"></div>
+            <div class="road-line" style="animation-delay: 0.6s;"></div>
+        </div>
+        
+        <!-- Loading Text -->
+        <div class="loading-title">AV-OS 1.0</div>
+        <div class="loading-subtitle">Autonomous Vehicle Chatbot</div>
+        
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar"></div>
+        </div>
+    </div>
+
     <div class="flex h-screen w-full">
         <!-- Mobile Header (only visible on mobile) -->
         <div class="md:hidden fixed top-0 left-0 right-0 z-50 bg-slate-800/95 backdrop-blur-sm border-b border-slate-700 px-4 py-3">
@@ -226,87 +532,87 @@
             </header>
 
             <!-- Chat Messages -->
-            <div class="flex-1 overflow-y-auto px-3 py-4 md:p-6 space-y-4 md:space-y-6 overscroll-behavior-contain" id="chatMessages">
+            <div class="flex-1 overflow-y-auto px-3 py-4 md:px-6 md:py-6 space-y-3 md:space-y-6 overscroll-behavior-contain" id="chatMessages" style="padding-bottom: 1rem;">
                 <!-- System Status -->
                 <div class="flex justify-center">
-                    <span class="px-6 py-3 bg-slate-800 text-slate-400 rounded-full text-base">
+                    <span class="px-4 py-2 md:px-6 md:py-3 bg-slate-800 text-slate-400 rounded-full text-sm md:text-base">
                         AV Intelligence System Ready
                     </span>
                 </div>
 
                 <!-- Welcome Message -->
-                <div class="flex items-start gap-4 message-animation">
-                    <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center shrink-0">
-                        <span class="material-symbols-outlined text-cyan-400">psychology</span>
+                <div class="flex items-start gap-3 md:gap-4 message-animation">
+                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-slate-700 flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-cyan-400 text-lg md:text-xl">psychology</span>
                     </div>
-                    <div class="flex-1 space-y-3">
-                        <div class="bg-slate-800 p-5 rounded-2xl rounded-tl-none border-l-4 border-cyan-400">
-                            <p class="text-white text-lg leading-relaxed mb-4">
+                    <div class="flex-1 space-y-2 md:space-y-3">
+                        <div class="bg-slate-800 p-4 md:p-5 rounded-2xl rounded-tl-none border-l-4 border-cyan-400">
+                            <p class="text-white text-base md:text-lg leading-relaxed mb-3 md:mb-4">
                                 Welcome to AV-OS Intelligence. I'm your specialized autonomous vehicle AI assistant. 
                                 I can help you understand self-driving technology, SAE levels, sensor systems, and everything about autonomous vehicles.
                             </p>
                             
                             <!-- Quick Examples -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
-                                <button class="text-left p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700 transition-colors" onclick="sendExampleQuestion('Explain SAE Level 4 vs Level 5 autonomy')">
-                                    <div class="flex items-center gap-3">
-                                        <span class="material-symbols-outlined text-cyan-400">layers</span>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3 mt-3 md:mt-4">
+                                <button class="text-left p-3 md:p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700 active:bg-slate-700 transition-colors" onclick="sendExampleQuestion('Explain SAE Level 4 vs Level 5 autonomy')">
+                                    <div class="flex items-center gap-2 md:gap-3">
+                                        <span class="material-symbols-outlined text-cyan-400 text-xl">layers</span>
                                         <div>
-                                            <p class="font-medium text-cyan-400 text-base">SAE Levels</p>
-                                            <p class="text-base text-slate-300">Autonomy Standards</p>
+                                            <p class="font-medium text-cyan-400 text-sm md:text-base">SAE Levels</p>
+                                            <p class="text-sm md:text-base text-slate-300">Autonomy Standards</p>
                                         </div>
                                     </div>
                                 </button>
-                                <button class="text-left p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700 transition-colors" onclick="sendExampleQuestion('Compare LiDAR vs Radar sensors')">
-                                    <div class="flex items-center gap-3">
-                                        <span class="material-symbols-outlined text-cyan-400">radar</span>
+                                <button class="text-left p-3 md:p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700 active:bg-slate-700 transition-colors" onclick="sendExampleQuestion('Compare LiDAR vs Radar sensors')">
+                                    <div class="flex items-center gap-2 md:gap-3">
+                                        <span class="material-symbols-outlined text-cyan-400 text-xl">radar</span>
                                         <div>
-                                            <p class="font-medium text-cyan-400 text-base">Sensors</p>
-                                            <p class="text-base text-slate-300">Detection Systems</p>
+                                            <p class="font-medium text-cyan-400 text-sm md:text-base">Sensors</p>
+                                            <p class="text-sm md:text-base text-slate-300">Detection Systems</p>
                                         </div>
                                     </div>
                                 </button>
-                                <button class="text-left p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700 transition-colors" onclick="sendExampleQuestion('How does Tesla FSD work?')">
-                                    <div class="flex items-center gap-3">
-                                        <span class="material-symbols-outlined text-cyan-400">precision_manufacturing</span>
+                                <button class="text-left p-3 md:p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700 active:bg-slate-700 transition-colors" onclick="sendExampleQuestion('How does Tesla FSD work?')">
+                                    <div class="flex items-center gap-2 md:gap-3">
+                                        <span class="material-symbols-outlined text-cyan-400 text-xl">precision_manufacturing</span>
                                         <div>
-                                            <p class="font-medium text-cyan-400 text-base">Companies</p>
-                                            <p class="text-base text-slate-300">Tesla & Waymo</p>
+                                            <p class="font-medium text-cyan-400 text-sm md:text-base">Companies</p>
+                                            <p class="text-sm md:text-base text-slate-300">Tesla & Waymo</p>
                                         </div>
                                     </div>
                                 </button>
-                                <button class="text-left p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700 transition-colors" onclick="sendExampleQuestion('Explain A* path planning algorithm')">
-                                    <div class="flex items-center gap-3">
-                                        <span class="material-symbols-outlined text-cyan-400">route</span>
+                                <button class="text-left p-3 md:p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700 active:bg-slate-700 transition-colors" onclick="sendExampleQuestion('Explain A* path planning algorithm')">
+                                    <div class="flex items-center gap-2 md:gap-3">
+                                        <span class="material-symbols-outlined text-cyan-400 text-xl">route</span>
                                         <div>
-                                            <p class="font-medium text-cyan-400 text-base">Algorithms</p>
-                                            <p class="text-base text-slate-300">Path Planning</p>
+                                            <p class="font-medium text-cyan-400 text-sm md:text-base">Algorithms</p>
+                                            <p class="text-sm md:text-base text-slate-300">Path Planning</p>
                                         </div>
                                     </div>
                                 </button>
                             </div>
                         </div>
-                        <p class="text-sm text-slate-500 ml-1">AV INTELLIGENCE • SYSTEM READY</p>
+                        <p class="text-xs md:text-sm text-slate-500 ml-1">AV INTELLIGENCE • SYSTEM READY</p>
                     </div>
                 </div>
 
                 <!-- Typing Indicator -->
-                <div class="flex items-start gap-4" id="typingIndicator" style="display: none;">
-                    <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center shrink-0">
-                        <span class="material-symbols-outlined text-cyan-400 animate-pulse">psychology</span>
+                <div class="flex items-start gap-3 md:gap-4" id="typingIndicator" style="display: none;">
+                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-slate-700 flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-cyan-400 animate-pulse text-lg md:text-xl">psychology</span>
                     </div>
                     <div class="flex-1">
-                        <div class="bg-slate-800 p-5 rounded-2xl rounded-tl-none border-l-4 border-cyan-400">
-                            <div class="flex items-center gap-3">
-                                <span class="text-white text-lg">AV Intelligence is thinking</span>
+                        <div class="bg-slate-800 p-4 md:p-5 rounded-2xl rounded-tl-none border-l-4 border-cyan-400">
+                            <div class="flex items-center gap-2 md:gap-3">
+                                <span class="text-white text-base md:text-lg">AV Intelligence is thinking</span>
                                 <div class="flex gap-1">
                                     <div class="w-2 h-2 bg-cyan-400 rounded-full typing-dot" style="animation-delay: 0s;"></div>
                                     <div class="w-2 h-2 bg-cyan-400 rounded-full typing-dot" style="animation-delay: 0.2s;"></div>
                                     <div class="w-2 h-2 bg-cyan-400 rounded-full typing-dot" style="animation-delay: 0.4s;"></div>
                                 </div>
                             </div>
-                            <div class="mt-3 bg-slate-700/50 rounded p-2">
-                                <div class="text-sm text-slate-300" id="processingStep">Processing your query...</div>
+                            <div class="mt-2 md:mt-3 bg-slate-700/50 rounded p-2">
+                                <div class="text-xs md:text-sm text-slate-300" id="processingStep">Processing your query...</div>
                                 <div class="mt-1 bg-slate-600 rounded-full h-1">
                                     <div class="h-full bg-cyan-400 rounded-full transition-all duration-300" id="progressBar" style="width: 0%;"></div>
                                 </div>
@@ -317,22 +623,23 @@
             </div>
 
             <!-- Input Area -->
-            <div class="border-t border-slate-700 bg-slate-800 p-3 md:p-4 pb-safe">
-                <div class="max-w-4xl mx-auto">
-                    <div class="flex items-end gap-2 md:gap-3 bg-slate-700 rounded-2xl p-2 md:p-3">
-                        <div class="flex-1">
+            <div class="border-t border-slate-700 bg-slate-800 p-3 md:p-6 pb-safe">
+                <div class="input-wrapper mx-auto w-full px-2 md:px-0">
+                    <div class="input-container flex items-end gap-2 md:gap-3 rounded-2xl p-2 md:p-3 border border-slate-600">
+                        <div class="flex-1 min-w-0">
                             <textarea 
                                 id="chatInput"
-                                class="chat-input w-full bg-transparent text-white placeholder-slate-400 border-none resize-none text-base md:text-lg p-3 md:p-3 leading-relaxed"
+                                class="chat-input w-full bg-transparent text-white border-none resize-none text-base p-3 leading-relaxed"
                                 placeholder="Ask about autonomous vehicles..."
                                 rows="1"
                                 onkeydown="handleKeyDown(event)"
                                 oninput="autoResize(this)"
+                                style="color: #ffffff;"
                             ></textarea>
                         </div>
                         <button 
                             id="sendButton"
-                            class="p-3 md:p-3 bg-cyan-500 text-white rounded-xl hover:bg-cyan-600 active:bg-cyan-700 transition-colors disabled:opacity-50 min-w-[48px] min-h-[48px] flex items-center justify-center"
+                            class="p-2.5 md:p-3 bg-cyan-500 text-white rounded-xl hover:bg-cyan-600 active:bg-cyan-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed min-w-[44px] min-h-[44px] flex items-center justify-center shrink-0"
                             onclick="sendMessage()"
                         >
                             <span class="material-symbols-outlined text-xl">send</span>
@@ -340,16 +647,18 @@
                     </div>
                     
                     <!-- Quick Actions -->
-                    <div class="flex items-center justify-between mt-3 text-sm md:text-base">
-                        <div class="flex gap-4 md:gap-4">
-                            <button class="text-slate-400 hover:text-cyan-400 active:text-cyan-300 transition-colors py-2 px-1 min-h-[44px] flex items-center" onclick="showExamples()">
-                                Examples
+                    <div class="flex items-center justify-between mt-3 text-sm px-1">
+                        <div class="flex gap-3 md:gap-4">
+                            <button class="text-slate-400 hover:text-cyan-400 transition-colors py-2 min-h-[40px] flex items-center" onclick="showExamples()">
+                                <span class="material-symbols-outlined text-base mr-1">lightbulb</span>
+                                <span class="hidden sm:inline">Examples</span>
                             </button>
-                            <button class="text-slate-400 hover:text-cyan-400 active:text-cyan-300 transition-colors py-2 px-1 min-h-[44px] flex items-center" onclick="showChatHistory()">
-                                History
+                            <button class="text-slate-400 hover:text-cyan-400 transition-colors py-2 min-h-[40px] flex items-center" onclick="showChatHistory()">
+                                <span class="material-symbols-outlined text-base mr-1">history</span>
+                                <span class="hidden sm:inline">History</span>
                             </button>
                         </div>
-                        <div class="flex items-center gap-2 text-xs md:text-sm text-slate-500">
+                        <div class="flex items-center gap-2 text-xs text-slate-500">
                             <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                             <span class="hidden sm:inline">AV Intelligence Online</span>
                             <span class="sm:hidden">Online</span>
@@ -399,7 +708,7 @@
         // Auto-resize textarea
         function autoResize(textarea) {
             textarea.style.height = 'auto';
-            textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+            textarea.style.height = Math.min(textarea.scrollHeight, 100) + 'px';
         }
 
         // Send example question
@@ -411,41 +720,41 @@
         // Add message to chat
         function addMessage(content, isUser = false) {
             const messageDiv = document.createElement('div');
-            messageDiv.className = `flex items-start gap-4 message-animation ${isUser ? 'flex-row-reverse' : ''}`;
+            messageDiv.className = `flex items-start gap-3 md:gap-4 message-animation ${isUser ? 'flex-row-reverse' : ''}`;
             
             const avatar = document.createElement('div');
-            avatar.className = 'w-10 h-10 rounded-full flex items-center justify-center shrink-0';
+            avatar.className = 'w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center shrink-0';
             
             if (isUser) {
                 avatar.className += ' bg-gradient-to-r from-cyan-400 to-blue-500';
-                avatar.innerHTML = '<span class="material-symbols-outlined text-white">person</span>';
+                avatar.innerHTML = '<span class="material-symbols-outlined text-white text-lg md:text-xl">person</span>';
             } else {
                 avatar.className += ' bg-slate-700';
-                avatar.innerHTML = '<span class="material-symbols-outlined text-cyan-400">psychology</span>';
+                avatar.innerHTML = '<span class="material-symbols-outlined text-cyan-400 text-lg md:text-xl">psychology</span>';
             }
             
             const messageContent = document.createElement('div');
             messageContent.className = `flex-1 space-y-2 ${isUser ? 'text-right' : ''}`;
             
             const bubble = document.createElement('div');
-            bubble.className = `p-4 rounded-2xl ${isUser ? 'bg-slate-700 rounded-tr-none' : 'bg-slate-800 rounded-tl-none border-l-4 border-cyan-400'}`;
+            bubble.className = `p-3 md:p-4 rounded-2xl ${isUser ? 'bg-slate-700 rounded-tr-none' : 'bg-slate-800 rounded-tl-none border-l-4 border-cyan-400'}`;
             
             if (isUser) {
-                bubble.innerHTML = `<p class="text-white text-lg">${content}</p>`;
+                bubble.innerHTML = `<p class="text-white text-base md:text-lg">${content}</p>`;
             } else {
                 const botContent = document.createElement('div');
-                botContent.className = 'text-white text-lg leading-relaxed';
+                botContent.className = 'text-white text-base md:text-lg leading-relaxed';
                 
                 try {
                     let parsedContent = marked.parse(content);
-                    // Clean styling
-                    parsedContent = parsedContent.replace(/<h2>/g, '<h2 class="text-xl font-bold text-cyan-400 mb-3 mt-4">');
-                    parsedContent = parsedContent.replace(/<h3>/g, '<h3 class="text-lg font-semibold text-cyan-300 mb-2">');
-                    parsedContent = parsedContent.replace(/<p>/g, '<p class="mb-3 text-white text-lg">');
-                    parsedContent = parsedContent.replace(/<ul>/g, '<ul class="list-disc list-inside space-y-2 mb-3 text-lg">');
-                    parsedContent = parsedContent.replace(/<ol>/g, '<ol class="list-decimal list-inside space-y-2 mb-3 text-lg">');
+                    // Clean styling with mobile-responsive sizes
+                    parsedContent = parsedContent.replace(/<h2>/g, '<h2 class="text-lg md:text-xl font-bold text-cyan-400 mb-2 md:mb-3 mt-3 md:mt-4">');
+                    parsedContent = parsedContent.replace(/<h3>/g, '<h3 class="text-base md:text-lg font-semibold text-cyan-300 mb-2">');
+                    parsedContent = parsedContent.replace(/<p>/g, '<p class="mb-2 md:mb-3 text-white text-base md:text-lg">');
+                    parsedContent = parsedContent.replace(/<ul>/g, '<ul class="list-disc list-inside space-y-1 md:space-y-2 mb-2 md:mb-3 text-base md:text-lg">');
+                    parsedContent = parsedContent.replace(/<ol>/g, '<ol class="list-decimal list-inside space-y-1 md:space-y-2 mb-2 md:mb-3 text-base md:text-lg">');
                     parsedContent = parsedContent.replace(/<strong>/g, '<strong class="text-cyan-300 font-semibold">');
-                    parsedContent = parsedContent.replace(/<code>/g, '<code class="bg-slate-900 text-cyan-300 px-2 py-1 rounded text-base">');
+                    parsedContent = parsedContent.replace(/<code>/g, '<code class="bg-slate-900 text-cyan-300 px-2 py-1 rounded text-sm md:text-base">');
                     
                     botContent.innerHTML = parsedContent;
                 } catch (error) {
@@ -456,7 +765,7 @@
             }
             
             const timestamp = document.createElement('p');
-            timestamp.className = `text-sm text-slate-500 ${isUser ? 'mr-1' : 'ml-1'}`;
+            timestamp.className = `text-xs md:text-sm text-slate-500 ${isUser ? 'mr-1' : 'ml-1'}`;
             timestamp.textContent = `${isUser ? 'USER' : 'AV INTELLIGENCE'} • ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
             
             messageContent.appendChild(bubble);
@@ -645,9 +954,15 @@
             addMessage(`**⚙️ AV-OS Settings**\n\n**System Configuration:**\n• Response Detail: Expert Mode\n• Auto-Save: Enabled\n• Real-time Analysis: Active\n\n**Features:**\n• Technical explanations\n• Industry analysis\n• Algorithm explanations\n• Safety discussions\n\nAll settings optimized for autonomous vehicle discussions.`);
         }
 
-        // Focus input on load
+        // Loading Screen Control
         window.addEventListener('load', () => {
-            chatInput.focus();
+            const loadingScreen = document.getElementById('loadingScreen');
+            
+            // Hide loading screen after 2.5 seconds
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+                chatInput.focus();
+            }, 2500);
         });
     </script>
 </body>

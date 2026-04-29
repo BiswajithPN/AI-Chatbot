@@ -136,8 +136,34 @@ SYSTEM_PROMPT = {
 # Store conversation history
 conversation_history = {}
 
+# Offline fallback responses for common AV questions
+OFFLINE_RESPONSES = {
+    "sae": "## 🎯 SAE Levels of Driving Automation\n\n**SAE Level 0 - No Automation:**\n- Human driver performs all tasks\n- No automated systems\n\n**SAE Level 1 - Driver Assistance:**\n- Single automated feature (cruise control, lane keeping)\n- Human monitors environment\n\n**SAE Level 2 - Partial Automation:**\n- Multiple automated features work together\n- Human must remain engaged and monitor\n- Examples: Tesla Autopilot, GM Super Cruise\n\n**SAE Level 3 - Conditional Automation:**\n- System handles all driving in specific conditions\n- Human must be ready to take over\n- Examples: Audi Traffic Jam Pilot\n\n**SAE Level 4 - High Automation:**\n- Full automation in specific areas/conditions\n- No human intervention needed in operational domain\n- Examples: Waymo in Phoenix\n\n**SAE Level 5 - Full Automation:**\n- Complete automation everywhere\n- No human driver needed\n- Currently theoretical",
+    
+    "lidar": "## 📡 LiDAR vs Radar Comparison\n\n| Feature | LiDAR | Radar |\n|---------|-------|-------|\n| **Range** | 100-300m | 200-300m |\n| **Resolution** | Very High | Medium |\n| **Weather** | Affected by rain/fog | Weather resistant |\n| **Cost** | High ($1000-$10000) | Low ($100-$500) |\n| **3D Mapping** | Excellent | Limited |\n| **Speed Detection** | Good | Excellent |\n| **Size** | Large | Compact |\n\n**LiDAR Advantages:**\n- Precise 3D point clouds\n- Excellent object detection\n- High resolution mapping\n\n**Radar Advantages:**\n- Works in all weather\n- Excellent velocity measurement\n- Lower cost and power consumption",
+    
+    "tesla": "## 🚗 Tesla Full Self-Driving (FSD)\n\n**Hardware:**\n- 8 cameras (360° coverage)\n- 12 ultrasonic sensors\n- Forward-facing radar\n- Custom FSD computer (144 TOPS)\n\n**Software Architecture:**\n- Neural networks for perception\n- Multi-task learning\n- End-to-end learning approach\n- Over-the-air updates\n\n**Key Features:**\n- Navigate on Autopilot\n- Auto Lane Change\n- Summon\n- Traffic Light Recognition\n- City Street Driving (Beta)\n\n**Approach:**\n- Vision-first strategy\n- Massive fleet learning\n- Simulation training\n- Real-world data collection",
+    
+    "waymo": "## 🚙 Waymo Autonomous Driving\n\n**Hardware Stack:**\n- Custom LiDAR sensors\n- High-resolution cameras\n- Radar sensors\n- Powerful onboard computers\n\n**Software Approach:**\n- Detailed HD maps\n- Sensor fusion algorithms\n- Machine learning models\n- Extensive simulation testing\n\n**Operational Design Domain:**\n- Geofenced areas\n- Pre-mapped routes\n- Specific weather conditions\n- Urban and suburban environments\n\n**Key Achievements:**\n- Over 20 million autonomous miles\n- Commercial robotaxi service\n- SAE Level 4 automation\n- Safety-first approach"
+}
+
+def get_offline_response(message):
+    """Get offline response for common AV questions"""
+    message_lower = message.lower()
+    
+    if any(word in message_lower for word in ['sae', 'level', 'automation']):
+        return OFFLINE_RESPONSES['sae']
+    elif any(word in message_lower for word in ['lidar', 'radar', 'sensor']):
+        return OFFLINE_RESPONSES['lidar']
+    elif 'tesla' in message_lower or 'fsd' in message_lower:
+        return OFFLINE_RESPONSES['tesla']
+    elif 'waymo' in message_lower:
+        return OFFLINE_RESPONSES['waymo']
+    else:
+        return "🚗 **AV Intelligence - Offline Mode**\n\nI'm currently running in offline mode. I can help with these topics:\n\n• **SAE Levels** - Ask about 'SAE levels' or 'automation levels'\n• **Sensors** - Ask about 'LiDAR vs Radar' or 'sensors'\n• **Tesla FSD** - Ask about 'Tesla' or 'FSD'\n• **Waymo** - Ask about 'Waymo'\n\nTry asking: *'Explain SAE levels'* or *'Compare LiDAR vs Radar'*"
+
 def get_response(message, session_id):
-    """Get response from Groq API with improved error handling"""
+    """Get response from Groq API with improved error handling and offline fallback"""
     try:
         # Initialize conversation history for new sessions
         if session_id not in conversation_history:
@@ -148,7 +174,7 @@ def get_response(message, session_id):
         
         # Get AI response with better error handling
         completion = client.chat.completions.create(
-            model="openai/gpt-oss-120b",
+            model="llama-3.1-8b-instant",  # Updated to current working model
             messages=conversation_history[session_id],
             temperature=0.7,
             max_tokens=2048,
@@ -165,18 +191,31 @@ def get_response(message, session_id):
         return response
         
     except Exception as e:
-        error_msg = f"API Error: {str(e)}"
-        print(f"[ERROR] {error_msg}")  # Log error for debugging
+        error_msg = str(e).lower()
+        print(f"[ERROR] API failed, trying offline mode: {error_msg}")
         
-        # Return user-friendly error message
-        if "rate limit" in str(e).lower():
-            return "⚠️ Rate limit exceeded. Please wait a moment and try again."
-        elif "api key" in str(e).lower():
-            return "🔑 API key issue. Please check your Groq API key configuration."
-        elif "network" in str(e).lower() or "connection" in str(e).lower():
-            return "🌐 Network connection issue. Please check your internet connection."
+        # Try offline response first
+        offline_response = get_offline_response(message)
+        if "Offline Mode" not in offline_response:
+            return offline_response
+        
+        # Return detailed error messages
+        if "rate limit" in error_msg or "429" in error_msg:
+            return "⚠️ **Rate Limit Reached**\n\nThe API rate limit has been exceeded. Please wait a moment and try again.\n\n*Tip: Try asking shorter questions or wait 1-2 minutes between requests.*"
+        
+        elif "api key" in error_msg or "401" in error_msg or "unauthorized" in error_msg:
+            return "🔑 **API Key Issue**\n\nThere's an issue with the API key configuration.\n\n**Solutions:**\n- Check if your Groq API key is valid\n- Verify the key in your .env file\n- Get a new key from: https://console.groq.com/keys\n\n**Offline Mode Available:**\nTry asking about: SAE levels, LiDAR vs Radar, Tesla FSD, or Waymo"
+        
+        elif "network" in error_msg or "connection" in error_msg or "timeout" in error_msg or "failed to fetch" in error_msg:
+            return f"🌐 **Connection Issue - Offline Mode Active**\n\nUnable to connect to the Groq servers, but I can still help with common AV topics!\n\n**Available offline topics:**\n• SAE Levels of automation\n• LiDAR vs Radar comparison\n• Tesla FSD overview\n• Waymo technology\n\n**Try asking:** *'Explain SAE levels'* or *'Compare LiDAR vs Radar'*"
+        
         else:
-            return f"❌ Sorry, I encountered an error: {str(e)[:100]}..."
+            # Return clean offline response for any other error
+            offline_response = get_offline_response(message)
+            if "Offline Mode" not in offline_response:
+                return offline_response
+            else:
+                return f"❌ **System Error - Offline Mode Available**\n\n{offline_response}"
 
 @app.route('/')
 def index():
@@ -309,11 +348,25 @@ def health_check():
     })
 
 if __name__ == '__main__':
-    print("🚗 Starting AVExpert - Autonomous Vehicle AI Chatbot...")
+    print("🚗 Starting AV-OS - Autonomous Vehicle Intelligence...")
     print("=" * 60)
-    print(f"📡 Server running at: http://localhost:5000")
+    
+    # Test API connection
+    print("� Testing Groq API connection...")
+    try:
+        test_completion = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=[{"role": "user", "content": "Hello"}],
+            max_tokens=10
+        )
+        print("✅ Groq API connection successful!")
+    except Exception as e:
+        print(f"⚠️  Groq API connection failed: {str(e)[:100]}...")
+        print("📝 The app will still run in offline mode with built-in AV responses.")
+        print("🔧 Check your internet connection and API key for full functionality.")
+    
+    print(f"📡 Server starting at: http://localhost:5000")
     print(f"🎨 Premium Interface: http://localhost:5000")
-    print(f"📱 Standalone Version: http://localhost:5000/standalone")
     print("🔑 Make sure your GROQ_API_KEY is set in the .env file")
     print("=" * 60)
     
