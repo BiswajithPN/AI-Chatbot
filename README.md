@@ -45,6 +45,15 @@ The **Autonomous Vehicle AI Chatbot** is a specialized tool designed for student
 
 Whether you're preparing for a technical interview at Waymo or Tesla, or studying for a university exam on **Sensor Fusion**, this assistant acts as your personal professor with a beautiful, modern interface.
 
+📁 Project Structure
+AI-Chatbot/
+├── assets/
+├── templates/
+├── app.py
+├── requirements.txt
+├── .env
+└── README.md
+
 ---
 
 ## ✨ Features
