@@ -1,674 +1,415 @@
-<!DOCTYPE html>
-<html class="dark" lang="en">
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AV-OS 1.0 - Autonomous Vehicle Intelligence</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet"/>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet" />
     <style>
         * {
+            box-sizing: border-box;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #0f172a;
-            color: #ffffff;
-        }
-        
-        /* Premium Loading Screen */
-        #loadingScreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
+
+        html, body {
             height: 100%;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top, rgba(14, 165, 233, 0.12), transparent 30%), #03070f;
+            color: #e2e8f0;
+            overflow: hidden;
+        }
+
+        .page-shell {
+            height: 100%;
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .chat-shell {
+            width: min(100%, 980px);
+            height: 100%;
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: 1rem;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(10, 18, 32, 0.96);
+            border-radius: 28px;
+            backdrop-filter: blur(18px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.24);
+        }
+
+        .brand-group {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 18px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(180deg, rgba(17, 94, 137, 0.2), rgba(16, 185, 228, 0.22));
+            border: 1px solid rgba(56, 189, 248, 0.18);
+            color: #38bdf8;
+        }
+
+        .brand-text {
+            display: grid;
+            gap: 0.15rem;
+        }
+
+        .brand-text p:first-child {
+            font-size: 0.76rem;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: #38bdf8;
+            margin: 0;
+        }
+
+        .brand-text p:last-child {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #f8fafc;
+        }
+
+
+        .chat-panel {
+            min-height: 0;
+            height: 100%;
             display: flex;
             flex-direction: column;
+            border-radius: 32px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(10, 18, 32, 0.94);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 50px 120px rgba(0, 0, 0, 0.32);
+        }
+
+        .chat-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(15, 23, 42, 0.85);
+        }
+
+        .chat-header .bubble {
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+            padding: 0.6rem 1rem;
+            border-radius: 999px;
+            background: rgba(56, 189, 248, 0.14);
+            color: #7dd3fc;
+            font-size: 0.88rem;
+            font-weight: 600;
+            letter-spacing: 0.01em;
         }
-        
-        #loadingScreen.hidden {
-            opacity: 0;
-            visibility: hidden;
+
+        .messages {
+            flex: 1;
+            min-height: 0;
+            padding: 1.2rem 1.25rem 0.8rem;
+            overflow-y: auto;
+            display: grid;
+            gap: 1rem;
         }
-        
-        /* Modern Car Animation */
-        .car-container {
+
+        .messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .messages::-webkit-scrollbar-thumb {
+            background: rgba(56, 189, 248, 0.26);
+            border-radius: 999px;
+        }
+
+        .message {
+            display: flex;
+            gap: 0.9rem;
+        }
+
+        .message.bot {
+            align-items: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .bubble {
+            max-width: 100%;
+            border-radius: 28px;
+            padding: 1rem 1.1rem;
+            line-height: 1.75;
+            font-size: 0.98rem;
             position: relative;
-            width: 200px;
-            height: 100px;
-            margin-bottom: 30px;
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
         }
-        
-        /* Road */
-        .road {
-            position: absolute;
-            bottom: 20px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent 0%, #475569 50%, transparent 100%);
+
+        .bubble.bot {
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(56, 189, 248, 0.1);
+            color: #f8fafc;
         }
-        
-        .road-line {
-            position: absolute;
-            bottom: 22px;
-            width: 30px;
-            height: 2px;
-            background: #06b6d4;
-            animation: roadMove 1s linear infinite;
+
+        .bubble.user {
+            background: rgba(30, 41, 59, 0.96);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #e2e8f0;
         }
-        
-        @keyframes roadMove {
-            0% { left: -30px; opacity: 0; }
-            50% { opacity: 1; }
-            100% { left: 100%; opacity: 0; }
-        }
-        
-        /* Car Body */
-        .car {
-            position: absolute;
-            bottom: 23px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 40px;
-        }
-        
-        .car-body {
-            position: absolute;
-            bottom: 10px;
-            left: 8px;
-            width: 85px;
-            height: 22px;
-            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
-            border-radius: 12px 12px 6px 6px;
-            box-shadow: 0 8px 30px rgba(6, 182, 212, 0.4);
-        }
-        
-        /* Car Roof */
-        .car-roof {
-            position: absolute;
-            bottom: 25px;
-            left: 25px;
-            width: 50px;
-            height: 18px;
-            background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
-            border-radius: 10px 10px 0 0;
-        }
-        
-        /* Windows */
-        .car-window {
-            position: absolute;
-            top: 2px;
-            width: 18px;
-            height: 11px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 2px;
-        }
-        
-        .car-window.left {
-            left: 4px;
-        }
-        
-        .car-window.right {
-            right: 4px;
-        }
-        
-        /* Wheels */
-        .wheel {
-            position: absolute;
-            bottom: 0;
-            width: 15px;
-            height: 15px;
-            background: #1e293b;
-            border: 2px solid #06b6d4;
-            border-radius: 50%;
-            animation: wheelRotate 0.6s linear infinite;
-        }
-        
-        .wheel.front {
-            right: 12px;
-        }
-        
-        .wheel.back {
-            left: 12px;
-        }
-        
-        @keyframes wheelRotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Headlights */
-        .headlight {
-            position: absolute;
-            bottom: 15px;
-            right: 6px;
-            width: 6px;
-            height: 6px;
-            background: #fbbf24;
-            border-radius: 50%;
-            box-shadow: 0 0 12px #fbbf24;
-            animation: headlightBlink 1.5s ease-in-out infinite;
-        }
-        
-        @keyframes headlightBlink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        
-        /* Sensor Waves */
-        .sensor-wave {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 20px;
-            border: 2px solid #06b6d4;
-            border-radius: 50%;
-            animation: sensorPulse 2s ease-out infinite;
-        }
-        
-        .sensor-wave:nth-child(2) {
-            animation-delay: 0.7s;
-        }
-        
-        @keyframes sensorPulse {
-            0% {
-                width: 20px;
-                height: 20px;
-                opacity: 1;
-            }
-            100% {
-                width: 80px;
-                height: 80px;
-                opacity: 0;
-            }
-        }
-        
-        /* Loading Text */
-        .loading-title {
-            font-size: 28px;
-            font-weight: 700;
-            color: #06b6d4;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
-        }
-        
-        .loading-subtitle {
-            font-size: 14px;
+
+        .bubble .meta {
+            display: block;
+            margin-top: 0.85rem;
+            font-size: 0.78rem;
             color: #94a3b8;
-            margin-bottom: 25px;
-            font-weight: 400;
         }
-        
-        /* Progress Bar */
-        .progress-container {
-            width: 280px;
-            max-width: 90vw;
-            height: 5px;
-            background: rgba(6, 182, 212, 0.15);
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
+
+        .bottom-actions {
+            margin-top: 0.85rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.75rem;
+            color: #94a3b8;
+            font-size: 0.92rem;
         }
-        
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #06b6d4 0%, #0891b2 50%, #06b6d4 100%);
-            background-size: 200% 100%;
-            animation: progressLoad 2.5s ease-out forwards, progressShine 1.5s ease-in-out infinite;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
+
+        .bottom-actions button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            background: rgba(255, 255, 255, 0.06);
+            color: #cbd5e1;
+            cursor: pointer;
+            font-size: 0.92rem;
+            padding: 0.75rem 1rem;
+            border-radius: 999px;
+            transition: background 0.2s ease, color 0.2s ease;
         }
-        
-        @keyframes progressLoad {
-            0% { width: 0%; }
-            100% { width: 100%; }
-        }
-        
-        @keyframes progressShine {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-        
-        
-        
-        .message-animation {
-            animation: slideIn 0.4s ease-out;
-        }
-        
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .typing-dot {
-            animation: typing 1.4s infinite ease-in-out;
-        }
-        
-        @keyframes typing {
-            0%, 80%, 100% { 
-                transform: scale(0.8); 
-                opacity: 0.5; 
-            }
-            40% { 
-                transform: scale(1.2); 
-                opacity: 1; 
-            }
-        }
-        
-        .nav-item {
-            transition: all 0.2s ease;
-        }
-        
-        .nav-item:hover {
-            background: rgba(6, 182, 212, 0.1);
-            transform: translateX(4px);
-        }
-        
-        .nav-item.active {
-            background: rgba(6, 182, 212, 0.15);
-            color: #06b6d4;
-            border-left: 3px solid #06b6d4;
-        }
-        
-        .chat-input {
-            resize: none;
-            overflow: hidden;
+
+        .bottom-actions button:hover {
+            background: rgba(56, 189, 248, 0.16);
             color: #ffffff;
         }
-        
-        .chat-input::placeholder {
-            color: #94a3b8;
-            opacity: 1;
+
+        .input-area {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(10, 18, 32, 0.96);
+            padding: 1rem 1.25rem 1.2rem;
         }
-        
-        .chat-input:focus {
+
+        .input-inner {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 0.85rem;
+            align-items: center;
+        }
+
+        .chat-input {
+            width: 100%;
+            min-height: 50px;
+            padding: 1rem 1rem;
+            border-radius: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(15, 23, 42, 0.9);
+            color: #f8fafc;
+            resize: none;
+            font-size: 0.98rem;
             outline: none;
         }
-        
-        .input-container {
-            transition: all 0.2s ease;
-            background: rgba(51, 65, 85, 0.9) !important;
+
+        .chat-input::placeholder {
+            color: #64748b;
         }
-        
-        .input-container:focus-within {
-            background: rgba(51, 65, 85, 1) !important;
+
+        .send-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.95rem 1.1rem;
+            border-radius: 22px;
+            border: none;
+            background: linear-gradient(180deg, #38bdf8, #0ea5e9);
+            color: #020617;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        
-        /* Desktop-only max-width */
-        @media (min-width: 768px) {
-            .input-wrapper {
-                max-width: 900px;
+
+        .send-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 18px 28px rgba(56, 189, 248, 0.28);
+        }
+
+        .bottom-actions {
+            margin-top: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            color: #94a3b8;
+            font-size: 0.92rem;
+        }
+
+        .bottom-actions button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            background: transparent;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 0.92rem;
+            padding: 0.45rem 0.75rem;
+            border-radius: 999px;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .bottom-actions button:hover {
+            background: rgba(56, 189, 248, 0.12);
+            color: #ffffff;
+        }
+
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 0.85rem;
+            padding: 1rem 1.1rem;
+            border-radius: 22px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(56, 189, 248, 0.14);
+            color: #cbd5e1;
+        }
+
+        .typing-indicator.active {
+            display: flex;
+        }
+
+        .typing-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 999px;
+            background: #38bdf8;
+            animation: pulse 1.2s ease-in-out infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.15s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes pulse {
+            0%, 80%, 100% { opacity: 0.4; transform: scale(0.9); }
+            40% { opacity: 1; transform: scale(1.15); }
+        }
+
+        @media (max-width: 860px) {
+            .chat-shell {
+                max-height: none;
+                gap: 1rem;
+            }
+
+            .top-bar, .chat-panel {
+                border-radius: 24px;
+            }
+
+            .send-button {
+                width: 100%;
+            }
+
+            .input-inner {
+                grid-template-columns: 1fr;
+            }
+
+            .brand-text p:last-child {
+                font-size: 1.2rem;
             }
         }
-        
-        /* Mobile optimizations */
-        @media (max-width: 767px) {
-            .input-wrapper {
-                max-width: 100%;
+
+        @media (max-width: 520px) {
+            .top-bar {
+                flex-direction: column;
+                align-items: stretch;
             }
-            
-            .input-container {
-                padding: 0.5rem !important;
-                background: rgba(51, 65, 85, 0.95) !important;
-            }
-            
-            .chat-input {
-                font-size: 16px !important; /* Prevents zoom on iOS */
-                padding: 0.75rem !important;
-                color: #ffffff !important;
-            }
-            
-            .chat-input::placeholder {
-                color: #cbd5e1 !important;
+
+            .brand-text p:last-child {
+                font-size: 1.1rem;
             }
         }
     </style>
 </head>
-<body class="bg-slate-900 text-white overflow-hidden">
-    <!-- Premium Loading Screen -->
-    <div id="loadingScreen">
-        <!-- Car Animation Container -->
-        <div class="car-container">
-            <!-- Sensor Waves -->
-            <div class="sensor-wave"></div>
-            <div class="sensor-wave"></div>
-            
-            <!-- Car -->
-            <div class="car">
-                <div class="car-roof">
-                    <div class="car-window left"></div>
-                    <div class="car-window right"></div>
-                </div>
-                <div class="car-body">
-                    <div class="headlight"></div>
-                </div>
-                <div class="wheel front"></div>
-                <div class="wheel back"></div>
-            </div>
-            
-            <!-- Road -->
-            <div class="road"></div>
-            <div class="road-line" style="animation-delay: 0s;"></div>
-            <div class="road-line" style="animation-delay: 0.3s;"></div>
-            <div class="road-line" style="animation-delay: 0.6s;"></div>
-        </div>
-        
-        <!-- Loading Text -->
-        <div class="loading-title">AV-OS 1.0</div>
-        <div class="loading-subtitle">Autonomous Vehicle Chatbot</div>
-        
-        <!-- Progress Bar -->
-        <div class="progress-container">
-            <div class="progress-bar"></div>
-        </div>
-    </div>
-
-    <div class="flex h-screen w-full">
-        <!-- Mobile Header (only visible on mobile) -->
-        <div class="md:hidden fixed top-0 left-0 right-0 z-50 bg-slate-800/95 backdrop-blur-sm border-b border-slate-700 px-4 py-3">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-lg bg-cyan-500 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-white text-lg">smart_toy</span>
+<body>
+    <div class="page-shell">
+        <div class="chat-shell">
+            <header class="top-bar">
+                <div class="brand-group">
+                    <div class="brand-icon">
+                        <span class="material-symbols-outlined">smart_toy</span>
                     </div>
-                    <div>
-                        <h2 class="text-cyan-400 font-bold text-lg">AV-OS 1.0</h2>
+                    <div class="brand-text">
+                        <p>AV Intelligence</p>
+                        <p>AV-OS 1.0</p>
                     </div>
                 </div>
-                <button id="mobileMenuBtn" class="p-3 text-slate-400 hover:text-cyan-400 transition-colors rounded-lg active:bg-slate-700/50 min-w-[48px] min-h-[48px] flex items-center justify-center">
-                    <span class="material-symbols-outlined text-2xl">menu</span>
-                </button>
-            </div>
-        </div>
+                </header>
 
-        <!-- Mobile Sidebar Overlay (only visible on mobile) -->
-        <div id="mobileSidebar" class="md:hidden fixed inset-0 z-40 transform -translate-x-full transition-transform duration-300 ease-in-out">
-            <div class="absolute inset-0 bg-black/60" onclick="closeMobileSidebar()"></div>
-            <aside class="relative w-80 max-w-[85vw] h-full bg-slate-800 border-r border-slate-700 py-6 overflow-y-auto">
-                <!-- Close Button -->
-                <div class="absolute top-4 right-4 z-10">
-                    <button onclick="closeMobileSidebar()" class="p-2 text-slate-400 hover:text-cyan-400 rounded-lg min-w-[44px] min-h-[44px] flex items-center justify-center">
-                        <span class="material-symbols-outlined">close</span>
-                    </button>
+            <section class="chat-panel">
+                <div class="chat-header">
+                    <span class="bubble">AV Intelligence System Ready</span>
                 </div>
-                
-                <!-- Logo -->
-                <div class="px-6 mb-8 pr-16">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-lg bg-cyan-500 flex items-center justify-center">
-                            <span class="material-symbols-outlined text-white">smart_toy</span>
-                        </div>
-                        <div>
-                            <h2 class="text-cyan-400 font-bold text-xl">AV-OS 1.0</h2>
-                            <p class="text-sm text-slate-400 uppercase tracking-wide">Autonomous Mode</p>
+                <div id="chatMessages" class="messages">
+                    <div class="message bot">
+                        <div class="bubble bot">
+                            <p>Welcome to AV-OS Intelligence. I'm your specialized autonomous vehicle AI assistant. I can help you understand self-driving technology, SAE levels, sensor systems, and everything about autonomous vehicles.</p>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Navigation -->
-                <nav class="flex-1 px-3 space-y-2">
-                    <a class="nav-item active flex items-center gap-3 px-4 py-4 rounded-lg text-base font-medium min-h-[56px]" href="#" onclick="switchMode('intelligence'); closeMobileSidebar();">
-                        <span class="material-symbols-outlined text-xl">psychology</span>
-                        <span>Intelligence</span>
-                    </a>
-                    <a class="nav-item flex items-center gap-3 px-4 py-4 rounded-lg text-base font-medium text-slate-400 min-h-[56px]" href="#" onclick="switchMode('history'); closeMobileSidebar();">
-                        <span class="material-symbols-outlined text-xl">history</span>
-                        <span>Chat History</span>
-                    </a>
-                    <a class="nav-item flex items-center gap-3 px-4 py-4 rounded-lg text-base font-medium text-slate-400 min-h-[56px]" href="#" onclick="switchMode('examples'); closeMobileSidebar();">
-                        <span class="material-symbols-outlined text-xl">lightbulb</span>
-                        <span>Examples</span>
-                    </a>
-                    <a class="nav-item flex items-center gap-3 px-4 py-4 rounded-lg text-base font-medium text-slate-400 min-h-[56px]" href="#" onclick="switchMode('settings'); closeMobileSidebar();">
-                        <span class="material-symbols-outlined text-xl">settings</span>
-                        <span>Settings</span>
-                    </a>
-                </nav>
-                
-                <!-- User Profile -->
-                <div class="px-6 mt-8">
-                    <div class="flex items-center gap-3 p-4 bg-slate-700/50 rounded-lg">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 flex items-center justify-center">
-                            <span class="material-symbols-outlined text-white">person</span>
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-base font-medium">AV Engineer</p>
-                            <p class="text-sm text-slate-400">Online</p>
-                        </div>
-                    </div>
+                <div id="typingIndicator" class="typing-indicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <span>AV Intelligence is generating your response...</span>
                 </div>
-            </aside>
-        </div>
-
-        <!-- Desktop Sidebar (unchanged) -->
-        <aside class="hidden md:flex flex-col h-full py-6 bg-slate-800 border-r border-slate-700 w-64">
-            <!-- Logo -->
-            <div class="px-6 mb-8">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-cyan-500 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-white">smart_toy</span>
-                    </div>
-                    <div>
-                        <h2 class="text-cyan-400 font-bold text-xl">AV-OS 1.0</h2>
-                        <p class="text-sm text-slate-400 uppercase tracking-wide">Autonomous Mode</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Navigation -->
-            <nav class="flex-1 px-3 space-y-2">
-                <a class="nav-item active flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium" href="#" onclick="switchMode('intelligence')">
-                    <span class="material-symbols-outlined text-xl">psychology</span>
-                    <span>Intelligence</span>
-                </a>
-                <a class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium text-slate-400" href="#" onclick="switchMode('history')">
-                    <span class="material-symbols-outlined text-xl">history</span>
-                    <span>Chat History</span>
-                </a>
-                <a class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium text-slate-400" href="#" onclick="switchMode('examples')">
-                    <span class="material-symbols-outlined text-xl">lightbulb</span>
-                    <span>Examples</span>
-                </a>
-                <a class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium text-slate-400" href="#" onclick="switchMode('settings')">
-                    <span class="material-symbols-outlined text-xl">settings</span>
-                    <span>Settings</span>
-                </a>
-            </nav>
-            
-            <!-- User Profile -->
-            <div class="px-6 mt-auto">
-                <div class="flex items-center gap-3 p-3 bg-slate-700/50 rounded-lg">
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-white text-sm">person</span>
-                    </div>
-                    <div class="flex-1">
-                        <p class="text-sm font-medium">AV Engineer</p>
-                        <p class="text-sm text-slate-400">Online</p>
-                    </div>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="flex-1 flex flex-col bg-slate-900 pt-16 md:pt-0">
-            <!-- Desktop Header (unchanged) -->
-            <header class="hidden md:flex justify-between items-center px-6 py-4 bg-slate-800 border-b border-slate-700">
-                <div class="flex items-center gap-4">
-                    <h1 class="text-2xl font-bold text-cyan-400">AV Intelligence</h1>
-                    <div class="flex items-center gap-4 text-base">
-                        <span class="flex items-center gap-1 text-green-400">
-                            <span class="material-symbols-outlined text-lg">circle</span>
-                            AI Active
-                        </span>
-                        <span class="flex items-center gap-1 text-slate-400">
-                            <span class="material-symbols-outlined text-lg">wifi</span>
-                            Connected
-                        </span>
-                    </div>
-                </div>
-                <button class="px-6 py-3 bg-red-500/20 text-red-400 rounded-lg border border-red-500/30 text-base hover:bg-red-500/30 transition-colors" onclick="clearChat()">
-                    Clear Chat
-                </button>
-            </header>
-
-            <!-- Chat Messages -->
-            <div class="flex-1 overflow-y-auto px-3 py-4 md:px-6 md:py-6 space-y-3 md:space-y-6 overscroll-behavior-contain" id="chatMessages" style="padding-bottom: 1rem;">
-                <!-- System Status -->
-                <div class="flex justify-center">
-                    <span class="px-4 py-2 md:px-6 md:py-3 bg-slate-800 text-slate-400 rounded-full text-sm md:text-base">
-                        AV Intelligence System Ready
-                    </span>
-                </div>
-
-                <!-- Welcome Message -->
-                <div class="flex items-start gap-3 md:gap-4 message-animation">
-                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-slate-700 flex items-center justify-center shrink-0">
-                        <span class="material-symbols-outlined text-cyan-400 text-lg md:text-xl">psychology</span>
-                    </div>
-                    <div class="flex-1 space-y-2 md:space-y-3">
-                        <div class="bg-slate-800 p-4 md:p-5 rounded-2xl rounded-tl-none border-l-4 border-cyan-400">
-                            <p class="text-white text-base md:text-lg leading-relaxed mb-3 md:mb-4">
-                                Welcome to AV-OS Intelligence. I'm your specialized autonomous vehicle AI assistant. 
-                                I can help you understand self-driving technology, SAE levels, sensor systems, and everything about autonomous vehicles.
-                            </p>
-                            
-                            <!-- Quick Examples -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3 mt-3 md:mt-4">
-                                <button class="text-left p-3 md:p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700 active:bg-slate-700 transition-colors" onclick="sendExampleQuestion('Explain SAE Level 4 vs Level 5 autonomy')">
-                                    <div class="flex items-center gap-2 md:gap-3">
-                                        <span class="material-symbols-outlined text-cyan-400 text-xl">layers</span>
-                                        <div>
-                                            <p class="font-medium text-cyan-400 text-sm md:text-base">SAE Levels</p>
-                                            <p class="text-sm md:text-base text-slate-300">Autonomy Standards</p>
-                                        </div>
-                                    </div>
-                                </button>
-                                <button class="text-left p-3 md:p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700 active:bg-slate-700 transition-colors" onclick="sendExampleQuestion('Compare LiDAR vs Radar sensors')">
-                                    <div class="flex items-center gap-2 md:gap-3">
-                                        <span class="material-symbols-outlined text-cyan-400 text-xl">radar</span>
-                                        <div>
-                                            <p class="font-medium text-cyan-400 text-sm md:text-base">Sensors</p>
-                                            <p class="text-sm md:text-base text-slate-300">Detection Systems</p>
-                                        </div>
-                                    </div>
-                                </button>
-                                <button class="text-left p-3 md:p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700 active:bg-slate-700 transition-colors" onclick="sendExampleQuestion('How does Tesla FSD work?')">
-                                    <div class="flex items-center gap-2 md:gap-3">
-                                        <span class="material-symbols-outlined text-cyan-400 text-xl">precision_manufacturing</span>
-                                        <div>
-                                            <p class="font-medium text-cyan-400 text-sm md:text-base">Companies</p>
-                                            <p class="text-sm md:text-base text-slate-300">Tesla & Waymo</p>
-                                        </div>
-                                    </div>
-                                </button>
-                                <button class="text-left p-3 md:p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700 active:bg-slate-700 transition-colors" onclick="sendExampleQuestion('Explain A* path planning algorithm')">
-                                    <div class="flex items-center gap-2 md:gap-3">
-                                        <span class="material-symbols-outlined text-cyan-400 text-xl">route</span>
-                                        <div>
-                                            <p class="font-medium text-cyan-400 text-sm md:text-base">Algorithms</p>
-                                            <p class="text-sm md:text-base text-slate-300">Path Planning</p>
-                                        </div>
-                                    </div>
-                                </button>
-                            </div>
-                        </div>
-                        <p class="text-xs md:text-sm text-slate-500 ml-1">AV INTELLIGENCE • SYSTEM READY</p>
-                    </div>
-                </div>
-
-                <!-- Typing Indicator -->
-                <div class="flex items-start gap-3 md:gap-4" id="typingIndicator" style="display: none;">
-                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-slate-700 flex items-center justify-center shrink-0">
-                        <span class="material-symbols-outlined text-cyan-400 animate-pulse text-lg md:text-xl">psychology</span>
-                    </div>
-                    <div class="flex-1">
-                        <div class="bg-slate-800 p-4 md:p-5 rounded-2xl rounded-tl-none border-l-4 border-cyan-400">
-                            <div class="flex items-center gap-2 md:gap-3">
-                                <span class="text-white text-base md:text-lg">AV Intelligence is thinking</span>
-                                <div class="flex gap-1">
-                                    <div class="w-2 h-2 bg-cyan-400 rounded-full typing-dot" style="animation-delay: 0s;"></div>
-                                    <div class="w-2 h-2 bg-cyan-400 rounded-full typing-dot" style="animation-delay: 0.2s;"></div>
-                                    <div class="w-2 h-2 bg-cyan-400 rounded-full typing-dot" style="animation-delay: 0.4s;"></div>
-                                </div>
-                            </div>
-                            <div class="mt-2 md:mt-3 bg-slate-700/50 rounded p-2">
-                                <div class="text-xs md:text-sm text-slate-300" id="processingStep">Processing your query...</div>
-                                <div class="mt-1 bg-slate-600 rounded-full h-1">
-                                    <div class="h-full bg-cyan-400 rounded-full transition-all duration-300" id="progressBar" style="width: 0%;"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Input Area -->
-            <div class="border-t border-slate-700 bg-slate-800 p-3 md:p-6 pb-safe">
-                <div class="input-wrapper mx-auto w-full px-2 md:px-0">
-                    <div class="input-container flex items-end gap-2 md:gap-3 rounded-2xl p-2 md:p-3 border border-slate-600">
-                        <div class="flex-1 min-w-0">
-                            <textarea 
-                                id="chatInput"
-                                class="chat-input w-full bg-transparent text-white border-none resize-none text-base p-3 leading-relaxed"
-                                placeholder="Ask about autonomous vehicles..."
-                                rows="1"
-                                onkeydown="handleKeyDown(event)"
-                                oninput="autoResize(this)"
-                                style="color: #ffffff;"
-                            ></textarea>
-                        </div>
-                        <button 
-                            id="sendButton"
-                            class="p-2.5 md:p-3 bg-cyan-500 text-white rounded-xl hover:bg-cyan-600 active:bg-cyan-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed min-w-[44px] min-h-[44px] flex items-center justify-center shrink-0"
-                            onclick="sendMessage()"
-                        >
-                            <span class="material-symbols-outlined text-xl">send</span>
+                <div class="input-area">
+                    <div class="input-inner">
+                        <textarea id="chatInput" class="chat-input" rows="1" placeholder="Ask about autonomous vehicles..."></textarea>
+                        <button id="sendButton" class="send-button" onclick="sendMessage()">
+                            <span class="material-symbols-outlined">send</span>
                         </button>
                     </div>
-                    
-                    <!-- Quick Actions -->
-                    <div class="flex items-center justify-between mt-3 text-sm px-1">
-                        <div class="flex gap-3 md:gap-4">
-                            <button class="text-slate-400 hover:text-cyan-400 transition-colors py-2 min-h-[40px] flex items-center" onclick="showExamples()">
-                                <span class="material-symbols-outlined text-base mr-1">lightbulb</span>
-                                <span class="hidden sm:inline">Examples</span>
-                            </button>
-                            <button class="text-slate-400 hover:text-cyan-400 transition-colors py-2 min-h-[40px] flex items-center" onclick="showChatHistory()">
-                                <span class="material-symbols-outlined text-base mr-1">history</span>
-                                <span class="hidden sm:inline">History</span>
-                            </button>
-                        </div>
-                        <div class="flex items-center gap-2 text-xs text-slate-500">
-                            <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                            <span class="hidden sm:inline">AV Intelligence Online</span>
-                            <span class="sm:hidden">Online</span>
-                        </div>
+                    <div class="bottom-actions">
+                        <button onclick="showExamples()"><span class="material-symbols-outlined">lightbulb</span> Examples</button>
+                        <button onclick="showChatHistory()"><span class="material-symbols-outlined">history</span> History</button>
                     </div>
                 </div>
-            </div>
-        </main>
+            </section>
+        </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
         const chatMessages = document.getElementById('chatMessages');
         const chatInput = document.getElementById('chatInput');
@@ -676,293 +417,99 @@
         const typingIndicator = document.getElementById('typingIndicator');
         const sessionId = 'av_session_' + Date.now();
 
-        // Mobile menu functions
-        function openMobileSidebar() {
-            const sidebar = document.getElementById('mobileSidebar');
-            sidebar.classList.remove('-translate-x-full');
-            document.body.style.overflow = 'hidden';
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.min(textarea.scrollHeight, 140) + 'px';
         }
 
-        function closeMobileSidebar() {
-            const sidebar = document.getElementById('mobileSidebar');
-            sidebar.classList.add('-translate-x-full');
-            document.body.style.overflow = 'auto';
-        }
-
-        // Mobile menu button event
-        document.addEventListener('DOMContentLoaded', function() {
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            if (mobileMenuBtn) {
-                mobileMenuBtn.addEventListener('click', openMobileSidebar);
-            }
-        });
-
-        // Handle keyboard input
-        function handleKeyDown(event) {
+        chatInput.addEventListener('input', () => autoResize(chatInput));
+        chatInput.addEventListener('keydown', (event) => {
             if (event.key === 'Enter' && !event.shiftKey) {
                 event.preventDefault();
                 sendMessage();
             }
-        }
+        });
 
-        // Auto-resize textarea
-        function autoResize(textarea) {
-            textarea.style.height = 'auto';
-            textarea.style.height = Math.min(textarea.scrollHeight, 100) + 'px';
-        }
-
-        // Send example question
-        function sendExampleQuestion(question) {
-            chatInput.value = question;
-            sendMessage();
-        }
-
-        // Add message to chat
         function addMessage(content, isUser = false) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `flex items-start gap-3 md:gap-4 message-animation ${isUser ? 'flex-row-reverse' : ''}`;
-            
-            const avatar = document.createElement('div');
-            avatar.className = 'w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center shrink-0';
-            
-            if (isUser) {
-                avatar.className += ' bg-gradient-to-r from-cyan-400 to-blue-500';
-                avatar.innerHTML = '<span class="material-symbols-outlined text-white text-lg md:text-xl">person</span>';
-            } else {
-                avatar.className += ' bg-slate-700';
-                avatar.innerHTML = '<span class="material-symbols-outlined text-cyan-400 text-lg md:text-xl">psychology</span>';
-            }
-            
-            const messageContent = document.createElement('div');
-            messageContent.className = `flex-1 space-y-2 ${isUser ? 'text-right' : ''}`;
-            
+            const row = document.createElement('div');
+            row.className = `message ${isUser ? 'user' : 'bot'}`;
+
             const bubble = document.createElement('div');
-            bubble.className = `p-3 md:p-4 rounded-2xl ${isUser ? 'bg-slate-700 rounded-tr-none' : 'bg-slate-800 rounded-tl-none border-l-4 border-cyan-400'}`;
-            
-            if (isUser) {
-                bubble.innerHTML = `<p class="text-white text-base md:text-lg">${content}</p>`;
-            } else {
-                const botContent = document.createElement('div');
-                botContent.className = 'text-white text-base md:text-lg leading-relaxed';
-                
-                try {
-                    let parsedContent = marked.parse(content);
-                    // Clean styling with mobile-responsive sizes
-                    parsedContent = parsedContent.replace(/<h2>/g, '<h2 class="text-lg md:text-xl font-bold text-cyan-400 mb-2 md:mb-3 mt-3 md:mt-4">');
-                    parsedContent = parsedContent.replace(/<h3>/g, '<h3 class="text-base md:text-lg font-semibold text-cyan-300 mb-2">');
-                    parsedContent = parsedContent.replace(/<p>/g, '<p class="mb-2 md:mb-3 text-white text-base md:text-lg">');
-                    parsedContent = parsedContent.replace(/<ul>/g, '<ul class="list-disc list-inside space-y-1 md:space-y-2 mb-2 md:mb-3 text-base md:text-lg">');
-                    parsedContent = parsedContent.replace(/<ol>/g, '<ol class="list-decimal list-inside space-y-1 md:space-y-2 mb-2 md:mb-3 text-base md:text-lg">');
-                    parsedContent = parsedContent.replace(/<strong>/g, '<strong class="text-cyan-300 font-semibold">');
-                    parsedContent = parsedContent.replace(/<code>/g, '<code class="bg-slate-900 text-cyan-300 px-2 py-1 rounded text-sm md:text-base">');
-                    
-                    botContent.innerHTML = parsedContent;
-                } catch (error) {
-                    botContent.textContent = content;
-                }
-                
-                bubble.appendChild(botContent);
-            }
-            
-            const timestamp = document.createElement('p');
-            timestamp.className = `text-xs md:text-sm text-slate-500 ${isUser ? 'mr-1' : 'ml-1'}`;
-            timestamp.textContent = `${isUser ? 'USER' : 'AV INTELLIGENCE'} • ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-            
-            messageContent.appendChild(bubble);
-            messageContent.appendChild(timestamp);
-            messageDiv.appendChild(avatar);
-            messageDiv.appendChild(messageContent);
-            
-            chatMessages.insertBefore(messageDiv, typingIndicator);
-            scrollToBottom();
-        }
+            bubble.className = `bubble ${isUser ? 'user' : 'bot'}`;
+            bubble.innerHTML = marked.parse(content);
 
-        // Show typing indicator
-        function showTyping() {
-            typingIndicator.style.display = 'flex';
-            
-            const steps = [
-                "Analyzing your query...",
-                "Accessing AV knowledge base...",
-                "Processing autonomous vehicle data...",
-                "Generating response..."
-            ];
-            
-            let currentStep = 0;
-            const processingStep = document.getElementById('processingStep');
-            const progressBar = document.getElementById('progressBar');
-            
-            const stepInterval = setInterval(() => {
-                if (currentStep < steps.length) {
-                    processingStep.textContent = steps[currentStep];
-                    progressBar.style.width = `${((currentStep + 1) / steps.length) * 100}%`;
-                    currentStep++;
-                } else {
-                    clearInterval(stepInterval);
-                }
-            }, 600);
-            
-            typingIndicator.stepInterval = stepInterval;
-            scrollToBottom();
-        }
+            const meta = document.createElement('span');
+            meta.className = 'meta';
+            meta.textContent = `${isUser ? 'You' : 'AV Intelligence'} • ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
-        // Hide typing indicator
-        function hideTyping() {
-            typingIndicator.style.display = 'none';
-            if (typingIndicator.stepInterval) {
-                clearInterval(typingIndicator.stepInterval);
-                typingIndicator.stepInterval = null;
-            }
-            const progressBar = document.getElementById('progressBar');
-            if (progressBar) {
-                progressBar.style.width = '0%';
-            }
-        }
-
-        // Scroll to bottom
-        function scrollToBottom() {
+            bubble.appendChild(meta);
+            row.appendChild(bubble);
+            chatMessages.appendChild(row);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        // Send message
+        function sendExampleQuestion(question) {
+            chatInput.value = question;
+            autoResize(chatInput);
+            sendMessage();
+        }
+
+        function showChatHistory() {
+            addMessage('**📚 Chat History**\n\nRecent conversations:\n- SAE Level 4 vs Level 5 Discussion\n- LiDAR vs Radar Comparison\n- Tesla FSD Architecture');
+        }
+
+        function showExamples() {
+            addMessage('**💡 Example Questions**\n\n- What are the differences between SAE Level 2 and Level 3?\n- How does sensor fusion work in autonomous vehicles?\n- Compare Waymo and Tesla approaches.');
+        }
+
+        function showSettings() {
+            addMessage('**⚙️ AV-OS Settings**\n\nSystem optimized for detailed autonomous vehicle explanations and sensor analysis.');
+        }
+
+        function showTyping() {
+            typingIndicator.classList.add('active');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function hideTyping() {
+            typingIndicator.classList.remove('active');
+        }
+
         async function sendMessage() {
             const message = chatInput.value.trim();
             if (!message) return;
 
-            chatInput.disabled = true;
-            sendButton.disabled = true;
-            sendButton.innerHTML = '<span class="material-symbols-outlined animate-spin">hourglass_empty</span>';
-            
             addMessage(message, true);
             chatInput.value = '';
-            chatInput.style.height = 'auto';
-            
+            autoResize(chatInput);
+            sendButton.disabled = true;
+            sendButton.textContent = 'Sending...';
             showTyping();
 
             try {
                 const response = await fetch('/chat', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        message: message,
-                        session_id: sessionId
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message, session_id: sessionId })
                 });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
                 const data = await response.json();
-                
-                // Minimum loading time for better UX
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                
+
                 if (data.error) {
-                    addMessage(`**⚠️ System Error**\n\n${data.error}\n\n*Please try again or contact support if the issue persists.*`);
+                    addMessage(`**⚠️ Error**\n${data.error}`);
                 } else {
-                    addMessage(data.response);
+                    addMessage(data.response || 'Sorry, I could not get a response.');
                 }
             } catch (error) {
-                await new Promise(resolve => setTimeout(resolve, 500));
-                addMessage(`**🔌 Connection Error**\n\nUnable to reach AV Intelligence servers. Please check your connection and try again.\n\n*Error: ${error.message}*`);
-                console.error('Error:', error);
+                addMessage(`**🔌 Connection Error**\nUnable to reach the server. ${error.message}`);
             } finally {
                 hideTyping();
-                
-                setTimeout(() => {
-                    chatInput.disabled = false;
-                    sendButton.disabled = false;
-                    sendButton.innerHTML = '<span class="material-symbols-outlined">send</span>';
-                    chatInput.focus();
-                }, 200);
+                sendButton.disabled = false;
+                sendButton.innerHTML = '<span class="material-symbols-outlined">send</span>';
             }
         }
 
-        // Clear chat
-        async function clearChat() {
-            try {
-                const response = await fetch('/clear', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        session_id: sessionId
-                    })
-                });
-
-                if (response.ok) {
-                    // Clear all messages except system status and welcome
-                    const messages = chatMessages.children;
-                    const elementsToRemove = [];
-                    
-                    for (let i = 0; i < messages.length; i++) {
-                        const element = messages[i];
-                        if (element.id !== 'typingIndicator' && 
-                            !element.textContent.includes('AV Intelligence System Ready') &&
-                            !element.textContent.includes('Welcome to AV-OS Intelligence')) {
-                            elementsToRemove.push(element);
-                        }
-                    }
-                    
-                    elementsToRemove.forEach(element => element.remove());
-                    
-                    // Add reset message
-                    const resetMsg = document.createElement('div');
-                    resetMsg.className = 'flex justify-center';
-                    resetMsg.innerHTML = '<span class="px-4 py-2 bg-slate-800 text-slate-400 rounded-full text-sm">Chat History Cleared</span>';
-                    chatMessages.insertBefore(resetMsg, typingIndicator);
-                }
-            } catch (error) {
-                console.error('Error clearing chat:', error);
-            }
-        }
-
-        // Navigation functions
-        function switchMode(mode) {
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            event.target.closest('.nav-item').classList.add('active');
-            
-            switch(mode) {
-                case 'history':
-                    showChatHistory();
-                    break;
-                case 'examples':
-                    showExamples();
-                    break;
-                case 'settings':
-                    showSettings();
-                    break;
-            }
-        }
-
-        function showChatHistory() {
-            addMessage(`**📚 Chat History**\n\nRecent conversations:\n\n• SAE Level 4 vs Level 5 Discussion - 2 hours ago\n• LiDAR vs Radar Comparison - 1 day ago\n• Tesla FSD Architecture - 3 days ago\n\n*Chat history is automatically saved.*`);
-        }
-
-        function showExamples() {
-            addMessage(`**💡 Example Questions**\n\n**SAE Levels:**\n• What are the differences between SAE Level 2 and Level 3?\n• How does SAE Level 5 full autonomy work?\n\n**Sensors:**\n• How does sensor fusion work in autonomous vehicles?\n• Compare LiDAR, Radar, and camera systems\n\n**Companies:**\n• Compare Waymo and Tesla approaches\n• How does Tesla's FSD neural network work?\n\n**Ethics:**\n• Explain ethical dilemmas in AV decision making\n• What are the main safety challenges?`);
-        }
-
-        function showSettings() {
-            addMessage(`**⚙️ AV-OS Settings**\n\n**System Configuration:**\n• Response Detail: Expert Mode\n• Auto-Save: Enabled\n• Real-time Analysis: Active\n\n**Features:**\n• Technical explanations\n• Industry analysis\n• Algorithm explanations\n• Safety discussions\n\nAll settings optimized for autonomous vehicle discussions.`);
-        }
-
-        // Loading Screen Control
         window.addEventListener('load', () => {
-            const loadingScreen = document.getElementById('loadingScreen');
-            
-            // Hide loading screen after 2.5 seconds
-            setTimeout(() => {
-                loadingScreen.classList.add('hidden');
-                chatInput.focus();
-            }, 2500);
+            chatInput.focus();
         });
     </script>
 </body>
