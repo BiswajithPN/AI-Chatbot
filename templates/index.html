@@ -1,0 +1,1392 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AV-OS 1.0 - Autonomous Vehicle Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 25%, #0f2847 50%, #1a1f3a 75%, #0a0e27 100%);
+            color: #e2e8f0;
+            overflow: hidden;
+            overflow-x: hidden;
+            border: none;
+            outline: none;
+        }
+
+        /* Loading Screen Styles - Premium Design */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 20%, #0f2847 40%, #1a2f4a 60%, #0f2847 80%, #0a0e27 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeOutScreen 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation-delay: 2.8s;
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .loading-screen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(56, 189, 248, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .loading-screen.hidden {
+            display: none;
+        }
+
+        @keyframes fadeOutScreen {
+            from {
+                opacity: 1;
+                visibility: visible;
+            }
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2.5rem;
+            animation: slideUpIn 1.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+
+        /* Coding effect - floating code snippets */
+        .code-snippet {
+            position: absolute;
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            color: rgba(56, 189, 248, 0.4);
+            opacity: 0;
+            pointer-events: none;
+            white-space: nowrap;
+            animation: codeFloat 6s ease-in-out infinite;
+        }
+
+        .code-snippet:nth-child(1) {
+            left: 5%;
+            top: 10%;
+            animation-delay: 0s;
+        }
+
+        .code-snippet:nth-child(2) {
+            right: 8%;
+            top: 20%;
+            animation-delay: 1s;
+        }
+
+        .code-snippet:nth-child(3) {
+            left: 10%;
+            bottom: 15%;
+            animation-delay: 2s;
+        }
+
+        .code-snippet:nth-child(4) {
+            right: 5%;
+            bottom: 20%;
+            animation-delay: 3s;
+        }
+
+        @keyframes codeFloat {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) translateX(0);
+            }
+            15% {
+                opacity: 0.6;
+            }
+            85% {
+                opacity: 0.6;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-50px) translateX(15px);
+            }
+        }
+
+        @keyframes slideUpIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Professional Car Animation */
+        .loading-logo {
+            width: 100%;
+            max-width: 600px;
+            height: 140px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .car-track {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .car-svg {
+            width: 180px;
+            height: 70px;
+            animation: carDrive 7s ease-in-out infinite;
+            filter: drop-shadow(0 0 35px rgba(56, 189, 248, 0.9)) drop-shadow(0 0 70px rgba(14, 165, 233, 0.5));
+        }
+
+        @keyframes carDrive {
+            0% {
+                transform: translateX(-300px);
+                opacity: 0;
+            }
+            8% {
+                opacity: 1;
+            }
+            50% {
+                transform: translateX(0px);
+            }
+            92% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(300px);
+                opacity: 0;
+            }
+        }
+
+        .car-glow {
+            position: absolute;
+            width: 200px;
+            height: 100px;
+            background: radial-gradient(ellipse at center, rgba(56, 189, 248, 0.4), transparent);
+            border-radius: 50%;
+            animation: carDrive 7s ease-in-out infinite;
+            filter: blur(30px);
+        }
+
+        .car-trail {
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.6), transparent);
+            top: 50%;
+            animation: trailPulse 7s ease-in-out infinite;
+        }
+
+        @keyframes trailPulse {
+            0% {
+                opacity: 0;
+            }
+            15% {
+                opacity: 1;
+            }
+            85% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .loading-text {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .loading-title {
+            font-size: 3.8rem;
+            font-weight: 900;
+            color: #00d9ff;
+            letter-spacing: 0.08em;
+            animation: fadeInText 1.2s ease-out 0.3s both;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .loading-subtitle {
+            font-size: 1.15rem;
+            color: #7dd3fc;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            font-weight: 700;
+            animation: fadeInText 1.2s ease-out 0.5s both, subtitlePulse 3.5s ease-in-out infinite 0.5s;
+            word-spacing: 0.4em;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            filter: drop-shadow(0 0 10px rgba(125, 211, 252, 0.5));
+        }
+
+        @keyframes subtitlePulse {
+            0%, 100% {
+                opacity: 0.85;
+                letter-spacing: 0.18em;
+            }
+            50% {
+                opacity: 1;
+                letter-spacing: 0.22em;
+            }
+        }
+
+        @keyframes fadeInText {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .loading-bar-container {
+            width: 280px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 999px;
+            overflow: hidden;
+            animation: fadeInText 1.2s ease-out 0.8s both;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3), 0 0 20px rgba(56, 189, 248, 0.2);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+        }
+
+        .loading-bar {
+            height: 100%;
+            background: linear-gradient(90deg, transparent, #38bdf8, #7dd3fc, #38bdf8, transparent);
+            background-size: 200% 100%;
+            border-radius: 999px;
+            animation: loadingProgress 3.5s ease-in-out infinite;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.9), inset 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes loadingProgress {
+            0% {
+                background-position: -200% 0%;
+            }
+            50% {
+                background-position: 100% 0%;
+            }
+            100% {
+                background-position: 200% 0%;
+            }
+        }
+
+        @keyframes loadingProgress {
+            0% {
+                background-position: -200% 0%;
+            }
+            50% {
+                background-position: 100% 0%;
+            }
+            100% {
+                background-position: 200% 0%;
+            }
+        }
+
+        .loading-status {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            animation: fadeInText 1.2s ease-out 1s both;
+            letter-spacing: 0.03em;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: linear-gradient(135deg, #38bdf8, #7dd3fc);
+            border-radius: 50%;
+            animation: statusPulse 2.2s ease-in-out infinite;
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.9);
+        }
+
+        @keyframes statusPulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(1.4);
+            }
+        }
+
+        .loading-features {
+            display: flex;
+            gap: 2rem;
+            margin-top: 0.5rem;
+            animation: fadeInText 0.9s ease-out 1s both;
+        }
+
+        .feature-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .feature-icon {
+            font-size: 1.8rem;
+            animation: featureFloat 3s ease-in-out infinite;
+        }
+
+        .feature-item:nth-child(2) .feature-icon {
+            animation-delay: 0.2s;
+        }
+
+        .feature-item:nth-child(3) .feature-icon {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes featureFloat {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .page-shell {
+            height: 100%;
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            padding: 1rem;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+            border: none;
+            outline: none;
+            animation: pageSlideIn 1s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+        }
+
+        @keyframes pageSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .chat-shell {
+            width: 100%;
+            max-width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: 1rem;
+            border: none;
+            outline: none;
+            overflow-x: hidden;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(10, 18, 32, 0.7);
+            border-radius: 28px;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            box-shadow: none !important;
+            animation: slideDown 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s both;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-25px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .brand-group {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 18px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(180deg, rgba(17, 94, 137, 0.2), rgba(16, 185, 228, 0.22));
+            border: 1px solid rgba(56, 189, 248, 0.18);
+            color: #38bdf8;
+        }
+
+        .brand-text {
+            display: grid;
+            gap: 0.15rem;
+        }
+
+        .brand-text p:first-child {
+            font-size: 0.75rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: #38bdf8;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .brand-text p:last-child {
+            margin: 0;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 0.03em;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            text-transform: capitalize;
+        }
+
+
+        .chat-panel {
+            min-height: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border-radius: 24px;
+            overflow: hidden;
+            background: #050b16;
+            border: 1px solid rgba(255,255,255,0.04);
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            box-shadow: 0 0 0 transparent, none;
+            position: relative;
+            isolation: isolate;
+            animation: panelSlideIn 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s both;
+        }
+
+        @keyframes panelSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-panel::before, .chat-panel::after {
+            content: none !important;
+            display: none !important;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .chat-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(15, 23, 42, 0.85);
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-header .bubble {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1rem;
+            border-radius: 999px;
+            background: rgba(56, 189, 248, 0.14);
+            color: #7dd3fc;
+            font-size: 0.88rem;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+        }
+
+        @media (max-width: 768px) {
+            .chat-header {
+                display: flex;
+            }
+        }
+
+        .clear-chat-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.7rem 1.2rem;
+            border-radius: 999px;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.1));
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: #fca5a5;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            letter-spacing: 0.01em;
+        }
+
+        .clear-chat-btn:hover {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(220, 38, 38, 0.2));
+            border-color: rgba(239, 68, 68, 0.5);
+            color: #fecaca;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+        }
+
+        .clear-chat-btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .clear-chat-btn span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            .chat-header {
+                display: flex;
+            }
+
+            .chat-header .bubble {
+                display: none;
+            }
+
+            .clear-chat-btn {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        .messages {
+            flex: 1;
+            min-height: 0;
+            padding: 1.2rem 1.25rem 0.8rem;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: grid;
+            gap: 1rem;
+            scrollbar-width: none;
+        }
+
+        .messages::-webkit-scrollbar {
+            display: none;
+            width: 0;
+        }
+
+        .messages::-webkit-scrollbar-thumb {
+            display: none;
+        }
+
+        .message {
+            display: flex;
+            gap: 0.9rem;
+            animation: messageSlideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes messageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.bot {
+            align-items: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .bubble {
+            max-width: 100%;
+            border-radius: 28px;
+            padding: 1rem 1.1rem;
+            line-height: 1.75;
+            font-size: 0.98rem;
+            position: relative;
+            box-shadow: none;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .bubble:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+        }
+
+        .bubble.bot {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(56, 189, 248, 0.15);
+            color: #f8fafc;
+        }
+
+        .bubble.user {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #e2e8f0;
+        }
+
+        .bubble .meta {
+            display: block;
+            margin-top: 0.85rem;
+            font-size: 0.78rem;
+            color: #94a3b8;
+        }
+
+        .bottom-actions {
+            margin-top: 0.85rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.75rem;
+            color: #94a3b8;
+            font-size: 0.92rem;
+        }
+
+        .bottom-actions button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            background: rgba(255, 255, 255, 0.06);
+            color: #cbd5e1;
+            cursor: pointer;
+            font-size: 0.92rem;
+            padding: 0.75rem 1rem;
+            border-radius: 999px;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .bottom-actions button:hover {
+            background: rgba(56, 189, 248, 0.16);
+            color: #ffffff;
+        }
+
+        .input-area {
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(10, 18, 32, 0.7);
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            padding: 1rem 1.25rem 1.2rem;
+            box-shadow: none;
+            border-radius: 0;
+            margin: 0;
+            border: none !important;
+            outline: none !important;
+        }
+
+        .input-inner {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 0.85rem;
+            align-items: flex-end;
+        }
+
+        @media (max-width: 860px) {
+            .input-inner {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chat-input {
+            width: 100%;
+            height: 50px;
+            padding: 0.75rem 1rem;
+            border-radius: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            color: #f8fafc;
+            resize: none;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            scrollbar-width: none;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .chat-input::-webkit-scrollbar {
+            display: none;
+        }
+
+        .chat-input:focus {
+            border-color: rgba(56, 189, 248, 0.4);
+            background: rgba(15, 23, 42, 0.8);
+            box-shadow: none;
+            height: auto;
+            white-space: normal;
+        }
+
+        .chat-input::placeholder {
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .send-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.95rem 1.1rem;
+            border-radius: 22px;
+            border: none;
+            background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+            color: #020617;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 8px 24px rgba(56, 189, 248, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+        }
+
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(56, 189, 248, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+        }
+
+        .send-button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+        }
+
+        .bottom-actions {
+            margin-top: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            color: #94a3b8;
+            font-size: 0.92rem;
+        }
+
+        @media (max-width: 768px) {
+            .bottom-actions {
+                display: none;
+            }
+        }
+
+        .bottom-actions button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #cbd5e1;
+            cursor: pointer;
+            font-size: 0.92rem;
+            padding: 0.75rem 1rem;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .bottom-actions button:hover {
+            background: rgba(56, 189, 248, 0.2);
+            color: #ffffff;
+            border-color: rgba(56, 189, 248, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(56, 189, 248, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+        }
+
+        .bottom-actions button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(56, 189, 248, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 0.85rem;
+            padding: 1rem 1.1rem;
+            border-radius: 22px;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(56, 189, 248, 0.15);
+            color: #cbd5e1;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            animation: messageSlideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .typing-indicator.active {
+            display: flex;
+        }
+
+        .typing-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+            animation: typingBounce 1.4s ease-in-out infinite;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingBounce {
+            0%, 60%, 100% {
+                opacity: 0.4;
+                transform: translateY(0);
+            }
+            30% {
+                opacity: 1;
+                transform: translateY(-10px);
+            }
+        }
+
+        @media (max-width: 860px) {
+            .chat-shell {
+                max-height: none;
+                gap: 1rem;
+            }
+
+            .top-bar, .chat-panel {
+                border-radius: 24px;
+            }
+
+            .send-button {
+                width: auto;
+            }
+
+            .input-inner {
+                grid-template-columns: 1fr auto;
+            }
+
+            .brand-text p:last-child {
+                font-size: 1.2rem;
+            }
+
+            .clear-chat-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 520px) {
+            body {
+                background: #03070f;
+            }
+
+            .page-shell {
+                padding: 0;
+            }
+
+            .chat-shell {
+                gap: 0;
+            }
+
+            .chat-panel {
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+                border-bottom: none;
+                width: 100vw;
+                max-width: 100vw;
+                overflow-x: hidden;
+            }
+
+            .messages {
+                padding-top: 0.5rem;
+            }
+
+            .top-bar {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0.8rem 1rem;
+                gap: 0.8rem;
+                border: none !important;
+                outline: none !important;
+            }
+
+            .brand-group {
+                gap: 0.6rem;
+            }
+
+            .brand-icon {
+                width: 40px;
+                height: 40px;
+            }
+
+            .brand-text p:first-child {
+                font-size: 0.7rem;
+                letter-spacing: 0.3em;
+            }
+
+            .brand-text p:last-child {
+                font-size: 1.2rem;
+            }
+
+            .clear-chat-btn {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.8rem;
+                gap: 0.4rem;
+                border: none !important;
+                outline: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-container">
+            <div class="code-snippet">const AI = new Chatbot();</div>
+            <div class="code-snippet">await initialize();</div>
+            <div class="code-snippet">response.send(data);</div>
+            <div class="code-snippet">engine.start();</div>
+            <div class="loading-logo">
+                <div class="car-track">
+                    <div class="car-trail"></div>
+                    <svg class="car-svg" viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <!-- Realistic car body gradient -->
+                            <linearGradient id="carBodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#1e3a8a;stop-opacity:1" />
+                                <stop offset="20%" style="stop-color:#2563eb;stop-opacity:1" />
+                                <stop offset="50%" style="stop-color:#3b82f6;stop-opacity:1" />
+                                <stop offset="80%" style="stop-color:#1e40af;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#1e3a8a;stop-opacity:1" />
+                            </linearGradient>
+                            
+                            <!-- Window glass -->
+                            <linearGradient id="glassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#e0f2fe;stop-opacity:0.7" />
+                                <stop offset="50%" style="stop-color:#7dd3fc;stop-opacity:0.4" />
+                                <stop offset="100%" style="stop-color:#38bdf8;stop-opacity:0.2" />
+                            </linearGradient>
+                            
+                            <!-- Metallic highlight -->
+                            <linearGradient id="metallic" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.5" />
+                                <stop offset="50%" style="stop-color:#ffffff;stop-opacity:0" />
+                                <stop offset="100%" style="stop-color:#000000;stop-opacity:0.15" />
+                            </linearGradient>
+                            
+                            <!-- Wheel gradient -->
+                            <radialGradient id="wheelGrad" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" style="stop-color:#404040;stop-opacity:1" />
+                                <stop offset="70%" style="stop-color:#1a1a1a;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#0a0a0a;stop-opacity:1" />
+                            </radialGradient>
+                            
+                            <!-- Glow filter -->
+                            <filter id="carGlow">
+                                <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+                                <feMerge>
+                                    <feMergeNode in="coloredBlur"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                            
+                            <!-- Shadow -->
+                            <filter id="carShadow">
+                                <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity="0.4"/>
+                            </filter>
+                        </defs>
+                        
+                        <!-- Ground shadow -->
+                        <ellipse cx="120" cy="105" rx="85" ry="10" fill="rgba(0,0,0,0.2)"/>
+                        
+                        <!-- Main body - realistic car shape -->
+                        <path d="M 50 70 L 70 35 L 170 35 L 190 70 L 190 85 Q 190 95 180 95 L 60 95 Q 50 95 50 85 Z" 
+                              fill="url(#carBodyGrad)" stroke="rgba(255,255,255,0.7)" stroke-width="2.2" filter="url(#carShadow)" stroke-linejoin="round"/>
+                        
+                        <!-- Metallic shine on body -->
+                        <path d="M 55 40 L 75 38 L 165 38 L 185 75 L 185 85 Q 185 92 178 92 L 62 92 Q 55 92 55 85 Z" 
+                              fill="url(#metallic)" opacity="0.7"/>
+                        
+                        <!-- Roof - curved top -->
+                        <path d="M 75 35 Q 120 15 165 35" 
+                              fill="url(#carBodyGrad)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" opacity="0.95"/>
+                        
+                        <!-- Front bumper -->
+                        <rect x="48" y="85" width="144" height="8" rx="2" fill="rgba(20,20,30,0.8)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                        
+                        <!-- Front grille -->
+                        <rect x="52" y="78" width="12" height="10" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="0.8"/>
+                        <line x1="55" y1="78" x2="55" y2="88" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+                        <line x1="58" y1="78" x2="58" y2="88" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+                        <line x1="61" y1="78" x2="61" y2="88" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+                        
+                        <!-- Front windshield - large and realistic -->
+                        <path d="M 68 35 L 85 20 L 95 32" 
+                              fill="url(#glassGrad)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" filter="url(#carGlow)"/>
+                        
+                        <!-- Rear windshield -->
+                        <path d="M 145 32 L 155 20 L 172 35" 
+                              fill="url(#glassGrad)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" filter="url(#carGlow)"/>
+                        
+                        <!-- Front side window -->
+                        <path d="M 85 32 Q 95 25 105 32" 
+                              fill="url(#glassGrad)" stroke="rgba(255,255,255,0.35)" stroke-width="1" filter="url(#carGlow)"/>
+                        
+                        <!-- Rear side window -->
+                        <path d="M 135 32 Q 145 25 155 32" 
+                              fill="url(#glassGrad)" stroke="rgba(255,255,255,0.35)" stroke-width="1" filter="url(#carGlow)"/>
+                        
+                        <!-- Door line -->
+                        <line x1="120" y1="35" x2="120" y2="92" stroke="rgba(255,255,255,0.12)" stroke-width="1.2"/>
+                        
+                        <!-- Front LED headlights - realistic -->
+                        <g filter="url(#carGlow)">
+                            <!-- Left headlight -->
+                            <ellipse cx="42" cy="72" rx="6" ry="7" fill="#38bdf8" opacity="0.95"/>
+                            <ellipse cx="42" cy="72" rx="4" ry="5" fill="#ffffff" opacity="0.5"/>
+                            <circle cx="42" cy="70" r="2" fill="#ffffff" opacity="0.8"/>
+                            
+                            <!-- Right headlight -->
+                            <ellipse cx="52" cy="72" rx="5" ry="6" fill="#38bdf8" opacity="0.8"/>
+                            <circle cx="52" cy="71" r="1.5" fill="#ffffff" opacity="0.6"/>
+                        </g>
+                        
+                        <!-- Rear LED taillights - realistic -->
+                        <g filter="url(#carGlow)">
+                            <!-- Left taillight -->
+                            <ellipse cx="188" cy="72" rx="6" ry="7" fill="#ff3333" opacity="0.95"/>
+                            <ellipse cx="188" cy="72" rx="4" ry="5" fill="#ff6666" opacity="0.5"/>
+                            <circle cx="188" cy="70" r="2" fill="#ff9999" opacity="0.8"/>
+                            
+                            <!-- Right taillight -->
+                            <ellipse cx="198" cy="72" rx="5" ry="6" fill="#ff3333" opacity="0.8"/>
+                            <circle cx="198" cy="71" r="1.5" fill="#ff6666" opacity="0.6"/>
+                        </g>
+                        
+                        <!-- Front wheel - realistic -->
+                        <g>
+                            <!-- Wheel rim -->
+                            <circle cx="70" cy="95" r="13" fill="url(#wheelGrad)" stroke="rgba(100,100,100,0.6)" stroke-width="1.5"/>
+                            <!-- Tire -->
+                            <circle cx="70" cy="95" r="11" fill="none" stroke="rgba(30,30,30,0.9)" stroke-width="2.5"/>
+                            <!-- Wheel center cap -->
+                            <circle cx="70" cy="95" r="4" fill="rgba(56, 189, 248, 0.4)" stroke="rgba(56, 189, 248, 0.6)" stroke-width="1"/>
+                            <!-- Wheel spokes effect -->
+                            <line x1="70" y1="84" x2="70" y2="106" stroke="rgba(100,100,100,0.3)" stroke-width="0.8"/>
+                            <line x1="59" y1="95" x2="81" y2="95" stroke="rgba(100,100,100,0.3)" stroke-width="0.8"/>
+                        </g>
+                        
+                        <!-- Rear wheel - realistic -->
+                        <g>
+                            <!-- Wheel rim -->
+                            <circle cx="170" cy="95" r="13" fill="url(#wheelGrad)" stroke="rgba(100,100,100,0.6)" stroke-width="1.5"/>
+                            <!-- Tire -->
+                            <circle cx="170" cy="95" r="11" fill="none" stroke="rgba(30,30,30,0.9)" stroke-width="2.5"/>
+                            <!-- Wheel center cap -->
+                            <circle cx="170" cy="95" r="4" fill="rgba(56, 189, 248, 0.4)" stroke="rgba(56, 189, 248, 0.6)" stroke-width="1"/>
+                            <!-- Wheel spokes effect -->
+                            <line x1="170" y1="84" x2="170" y2="106" stroke="rgba(100,100,100,0.3)" stroke-width="0.8"/>
+                            <line x1="159" y1="95" x2="181" y2="95" stroke="rgba(100,100,100,0.3)" stroke-width="0.8"/>
+                        </g>
+                        
+                        <!-- Side mirror -->
+                        <g>
+                            <rect x="65" y="50" width="4" height="8" rx="1" fill="rgba(30,30,40,0.9)" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+                            <rect x="64" y="48" width="6" height="5" rx="1" fill="rgba(56, 189, 248, 0.3)" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+                        </g>
+                        
+                        <!-- Sensor rings - autonomous indicator -->
+                        <circle cx="120" cy="60" r="65" fill="none" stroke="rgba(56, 189, 248, 0.12)" stroke-width="1.2" opacity="0.6"/>
+                        <circle cx="120" cy="60" r="85" fill="none" stroke="rgba(56, 189, 248, 0.08)" stroke-width="1" opacity="0.4"/>
+                    </svg>
+                    <div class="car-glow"></div>
+                </div>
+            </div>
+            <div class="loading-text">
+                <div class="loading-title">Chatbot</div>
+                <div class="loading-subtitle">Autonomous Vehicle Intelligence</div>
+            </div>
+            <div class="loading-bar-container">
+                <div class="loading-bar"></div>
+            </div>
+            <div class="loading-status">
+                <span class="status-dot"></span>Initializing Core Systems
+            </div>
+        </div>
+    </div>
+
+    <div class="page-shell">
+        <div class="chat-shell">
+            <header class="top-bar">
+                <div class="brand-group">
+                    <div class="brand-icon">
+                        <span class="material-symbols-outlined">smart_toy</span>
+                    </div>
+                    <div class="brand-text">
+                        <p>AV Intelligence</p>
+                        <p>Chatbot</p>
+                    </div>
+                </div>
+                <button class="clear-chat-btn" onclick="clearChat()">
+                    <span class="material-symbols-outlined" style="font-size: 1rem;">delete_sweep</span>
+                    Clear Chat
+                </button>
+                </header>
+
+            <section class="chat-panel">
+                <div class="chat-header">
+                    <span class="bubble">AV Intelligence System Ready</span>
+                </div>
+                <div id="chatMessages" class="messages">
+                    <div class="message bot">
+                        <div class="bubble bot">
+                            <p>Welcome to AV-OS Intelligence. I'm your specialized autonomous vehicle AI assistant. I can help you understand self-driving technology, SAE levels, sensor systems, and everything about autonomous vehicles.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="typingIndicator" class="typing-indicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <span>AV Intelligence is generating your response...</span>
+                </div>
+                <div class="input-area">
+                    <div class="input-inner">
+                        <textarea id="chatInput" class="chat-input" rows="1" placeholder="Ask about autonomous vehicles..."></textarea>
+                        <button id="sendButton" class="send-button" onclick="sendMessage()">
+                            <span class="material-symbols-outlined">send</span>
+                        </button>
+                    </div>
+                    <div class="bottom-actions">
+                        <button onclick="showExamples()"><span class="material-symbols-outlined">lightbulb</span> Examples</button>
+                        <button onclick="showChatHistory()"><span class="material-symbols-outlined">history</span> History</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        // Initialize loading screen with enhanced timing
+        window.addEventListener('load', () => {
+            const loadingScreen = document.getElementById('loadingScreen');
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+                document.getElementById('chatInput').focus();
+            }, 3200);
+        });
+
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const sendButton = document.getElementById('sendButton');
+        const typingIndicator = document.getElementById('typingIndicator');
+        const sessionId = 'av_session_' + Date.now();
+
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.min(textarea.scrollHeight, 140) + 'px';
+        }
+
+        chatInput.addEventListener('input', () => autoResize(chatInput));
+        chatInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+
+        function addMessage(content, isUser = false) {
+            const row = document.createElement('div');
+            row.className = `message ${isUser ? 'user' : 'bot'}`;
+
+            const bubble = document.createElement('div');
+            bubble.className = `bubble ${isUser ? 'user' : 'bot'}`;
+            bubble.innerHTML = marked.parse(content);
+
+            const meta = document.createElement('span');
+            meta.className = 'meta';
+            meta.textContent = `${isUser ? 'You' : 'AV Intelligence'} • ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+
+            bubble.appendChild(meta);
+            row.appendChild(bubble);
+            chatMessages.appendChild(row);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function sendExampleQuestion(question) {
+            chatInput.value = question;
+            autoResize(chatInput);
+            sendMessage();
+        }
+
+        function showChatHistory() {
+            addMessage('**📚 Chat History**\n\nRecent conversations:\n- SAE Level 4 vs Level 5 Discussion\n- LiDAR vs Radar Comparison\n- Tesla FSD Architecture');
+        }
+
+        function showExamples() {
+            const examples = [
+                "🚗 **SAE Level 2 vs Level 3**: Level 2 requires driver monitoring, Level 3 handles driving autonomously in specific conditions.",
+                "📡 **LiDAR Technology**: Uses laser pulses to create 3D maps, excellent for obstacle detection but affected by rain/fog.",
+                "🧠 **Neural Networks in FSD**: Tesla uses end-to-end learning with 8 cameras for vision-based autonomous driving.",
+                "🛣️ **Path Planning**: A* algorithm finds optimal routes by evaluating cost and distance to destination.",
+                "🚙 **Waymo's Approach**: Uses detailed HD maps, sensor fusion, and extensive simulation testing for Level 4 autonomy.",
+                "⚡ **Sensor Fusion**: Combines data from LiDAR, Radar, and cameras for robust perception and decision-making.",
+                "🎯 **Object Detection**: YOLO and CNN models identify pedestrians, vehicles, and obstacles in real-time.",
+                "🔄 **Vehicle Control**: PID controllers manage steering, acceleration, and braking based on planned trajectory.",
+                "📊 **Safety Standards**: ISO 26262 defines functional safety requirements for autonomous vehicle systems.",
+                "🌍 **HD Maps**: High-definition maps provide lane-level accuracy for autonomous navigation and localization."
+            ];
+            
+            const randomExample = examples[Math.floor(Math.random() * examples.length)];
+            addMessage(randomExample);
+        }
+
+        function showSettings() {
+            addMessage('**⚙️ AV-OS Settings**\n\nSystem optimized for detailed autonomous vehicle explanations and sensor analysis.');
+        }
+
+        function clearChat() {
+            if (confirm('Are you sure you want to clear all messages?')) {
+                chatMessages.innerHTML = `
+                    <div class="message bot">
+                        <div class="bubble bot">
+                            <p>Welcome to AV-OS Intelligence. I'm your specialized autonomous vehicle AI assistant. I can help you understand self-driving technology, SAE levels, sensor systems, and everything about autonomous vehicles.</p>
+                        </div>
+                    </div>
+                `;
+                
+                // Clear on backend
+                fetch('/clear', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session_id: sessionId })
+                }).catch(error => console.log('Clear request sent'));
+            }
+        }
+
+        function showTyping() {
+            typingIndicator.classList.add('active');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function hideTyping() {
+            typingIndicator.classList.remove('active');
+        }
+
+        async function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            addMessage(message, true);
+            chatInput.value = '';
+            autoResize(chatInput);
+            sendButton.disabled = true;
+            sendButton.textContent = 'Sending...';
+            showTyping();
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message, session_id: sessionId })
+                });
+                const data = await response.json();
+
+                if (data.error) {
+                    addMessage(`**⚠️ Error**\n${data.error}`);
+                } else {
+                    addMessage(data.response || 'Sorry, I could not get a response.');
+                }
+            } catch (error) {
+                addMessage(`**🔌 Connection Error**\nUnable to reach the server. ${error.message}`);
+            } finally {
+                hideTyping();
+                sendButton.disabled = false;
+                sendButton.innerHTML = '<span class="material-symbols-outlined">send</span>';
+            }
+        }
+
+        window.addEventListener('load', () => {
+            chatInput.focus();
+        });
+    </script>
+</body>
+</html>
